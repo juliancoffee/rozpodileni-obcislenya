@@ -1,0 +1,6 @@
+# build directory
+bin/
+# clangd cache
+.cache/
+# compile_commands.json (generated for clang to work)
+compile_commands.json
