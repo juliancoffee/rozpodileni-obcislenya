@@ -1,19 +1,58 @@
 #include "util.h"
 #include <gtk/gtk.h>
 
+// input: ratio is between 0 to 1
+// output: rgb color
+static void rgb(double ratio, double *red, double *green, double *blue) {
+  // we want to normalize ratio so that it fits in to 6 regions
+  // where each region is 256 units long
+  int normalized = (int)(ratio * 256 * 6);
+
+  // find the distance to the start of the closest region
+  double x = (double)(normalized % 256) / 256;
+
+  *red = 0;
+  *green = 0;
+  *blue = 0;
+  switch (normalized / 256) {
+  case 0:
+    *red = 1;
+    *green = x;
+    *blue = 0;
+    break; // red
+  case 1:
+    *red = 1 - x;
+    *green = 1;
+    *blue = 0;
+    break; // yellow
+  case 2:
+    *red = 0;
+    *green = 1;
+    *blue = x;
+    break; // green
+  case 3:
+    *red = 0;
+    *green = 1 - x;
+    *blue = 1;
+    break; // cyan
+  case 4:
+    *red = x;
+    *green = 0;
+    *blue = 1;
+    break; // blue
+  case 5:
+    *red = 1;
+    *green = 0;
+    *blue = 1 - x;
+    break; // magenta
+  }
+}
+
+//input: int color from 0 to 1000
 static void set_colors_from(int color, double *red, double *green,
                             double *blue) {
-  switch (color) {
-  case 1:
-    *red = 1;
-    break;
-  case 2:
-    *green = 1;
-    break;
-  case 3:
-    *blue = 1;
-    break;
-  }
+  double colorf = color;
+  rgb(colorf / 1000, red, green, blue);
 }
 
 void draw_square(cairo_t *cr, int *colors, size_t size) {

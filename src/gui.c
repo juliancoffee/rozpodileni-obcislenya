@@ -46,7 +46,7 @@ static void on_draw_button(GtkWidget *_widget, gpointer drawing_area) {
 
   int* colors = malloc(sizeof(int) * pixels * pixels);
   for (int i = 0; i < pixels * pixels; i++) {
-    colors[i] = rand() % 3 + 1;;
+    colors[i] = i % 1000;
   }
   draw_square(cr, colors, pixels);
 
