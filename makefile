@@ -2,7 +2,8 @@
 
 CC=gcc
 CFLAGS=-g
-INCLUDE=`pkg-config --cflags gtk+-3.0`
+FILES=src/*.c
+INCLUDE=`pkg-config --cflags gtk+-3.0` -I src/
 LIBS=`pkg-config --libs gtk+-3.0`
 
 all: bin/main
@@ -12,8 +13,8 @@ all: bin/main
 run: bin/main
 	./bin/main --class float_please
 
-bin/main: src/main.c
-	$(CC) $(INCLUDE) $(LIBS) $(CFLAGS) src/main.c -o bin/main 
+bin/main: $(FILES)
+	$(CC) $(INCLUDE) $(LIBS) $(CFLAGS) $(FILES) -o bin/main 
 
 clean:
 	rm -rf bin/main
