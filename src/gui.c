@@ -1,8 +1,11 @@
 #include <gtk/gtk.h>
 #include "draw.h"
 #include "util.h"
+#include "globals.h"
+#include "controls.h"
 
 static cairo_surface_t *surface = NULL;
+extern struct GlobalData global_data;
 
 static void clear_surface(void) {
   cairo_t *cr;
@@ -33,28 +36,11 @@ static gboolean configure_cb(GtkWidget *widget, GdkEventConfigure *event,
       gtk_widget_get_allocated_height(widget));
 
   clear_surface();
+  global_data.surface = surface;
   return TRUE;
 }
 
-static void on_draw_button(GtkWidget *_widget, gpointer drawing_area) {
-  /* cairo context */
-  cairo_t *cr;
-  gint pixels = gtk_widget_get_allocated_width(drawing_area);
-
-  /* Paint to the surface, where we store our state */
-  cr = cairo_create (surface);
-
-  int* colors = malloc(sizeof(int) * pixels * pixels);
-  for (int i = 0; i < pixels * pixels; i++) {
-    colors[i] = i % 1000;
-  }
-  draw_square(cr, colors, pixels);
-
-  /* actually redraw */
-  gtk_widget_queue_draw_area (drawing_area, 0, 0, pixels, pixels);
-}
-
-static void activate(GtkApplication *app, int *pixels) {
+static void activate(GtkApplication *app) {
   GtkWidget *window = gtk_application_window_new(app);
 
   gtk_window_set_title(GTK_WINDOW(window), "Mandelbrot Set Draw");
@@ -67,7 +53,7 @@ static void activate(GtkApplication *app, int *pixels) {
   gtk_container_add(GTK_CONTAINER(box), button_box);
 
   GtkWidget *frame = gtk_frame_new(NULL);
-  gtk_widget_set_size_request(frame, *pixels, *pixels);
+  gtk_widget_set_size_request(frame, global_data.pixels, global_data.pixels);
   gtk_container_add(GTK_CONTAINER(box), frame);
 
   GtkWidget *drawing_area = gtk_drawing_area_new();
@@ -87,11 +73,11 @@ static void activate(GtkApplication *app, int *pixels) {
   gtk_widget_show_all(window);
 }
 
-int start_app(int argc, char** argv, int pixels) {
+int start_app(int argc, char** argv) {
   GtkApplication *app = gtk_application_new("org.example.mandelbrot-draw",
                                             G_APPLICATION_FLAGS_NONE);
 
-  g_signal_connect(app, "activate", G_CALLBACK(activate), &pixels);
+  g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
   int status = g_application_run(G_APPLICATION(app), argc, argv);
   g_object_unref(app);
   return status;

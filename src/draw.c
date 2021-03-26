@@ -48,11 +48,11 @@ static void rgb(double ratio, double *red, double *green, double *blue) {
   }
 }
 
-//input: int color from 0 to 1000
+//input: int color from 0 to 500
 static void set_colors_from(int color, double *red, double *green,
                             double *blue) {
   double colorf = color;
-  rgb(colorf / 1000, red, green, blue);
+  rgb(colorf / 500, red, green, blue);
 }
 
 void draw_square(cairo_t *cr, int *colors, size_t size) {
