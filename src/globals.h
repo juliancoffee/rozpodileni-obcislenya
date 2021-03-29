@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <gtk/gtk.h>
 
+#define NUM_COLORS 500
+
 struct RGB {
   double red;
   double green;
@@ -9,7 +11,7 @@ struct RGB {
 };
 
 struct Palette {
-  struct RBG *data;
+  struct RGB *data;
   size_t len;
 };
 
@@ -18,3 +20,4 @@ struct GlobalData {
   struct Palette palette;
   cairo_surface_t* surface;
 };
+

@@ -7,7 +7,7 @@ struct GlobalData global_data = {
 };
 
 int main(int argc, char **argv) {
-  global_data.pixels = 500;
+  global_data.pixels = atoi(getenv("IMG_SIZE"));
   int status = start_app(argc, argv);
   return status;
 }

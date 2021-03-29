@@ -1,9 +1,13 @@
-#include "util.h"
+#include <assert.h>
 #include <gtk/gtk.h>
+#include "util.h"
+#include "globals.h"
+
+extern struct GlobalData global_data;
 
 // input: ratio is between 0 to 1
 // output: rgb color
-static void rgb(double ratio, double *red, double *green, double *blue) {
+static void set_rgb(double ratio, double *red, double *green, double *blue) {
   // we want to normalize ratio so that it fits in to 6 regions
   // where each region is 256 units long
   int normalized = (int)(ratio * 256 * 6);
@@ -48,11 +52,27 @@ static void rgb(double ratio, double *red, double *green, double *blue) {
   }
 }
 
-//input: int color from 0 to 500
+void init_palette(struct Palette *palette) {
+  const size_t num_colors = NUM_COLORS;
+  palette->data = (struct RGB*)malloc(sizeof(struct RGB) * num_colors);
+  palette->len = num_colors;
+  for (size_t color = 0; color < num_colors; color++) {
+    float colorf = (float) color;
+    set_rgb(colorf / num_colors, &palette->data[color].red, &palette->data[color].green, &palette->data[color].blue);
+  }
+}
+
+
+//input: int color from 0 to NUM_COLORS
 static void set_colors_from(int color, double *red, double *green,
                             double *blue) {
-  double colorf = color;
-  rgb(colorf / 500, red, green, blue);
+  if (global_data.palette.data == NULL) {
+    init_palette(&global_data.palette);
+  }
+  assert (color < global_data.palette.len);
+  *red = global_data.palette.data[color - 1].red;
+  *green = global_data.palette.data[color - 1].green;
+  *blue = global_data.palette.data[color - 1].blue;
 }
 
 void draw_square(cairo_t *cr, int *colors, size_t size) {
@@ -61,7 +81,7 @@ void draw_square(cairo_t *cr, int *colors, size_t size) {
       double red = 0;
       double green = 0;
       double blue = 0;
-      int *color = get_at(colors, x, y, size);
+      int *color = element_at(colors, x, y, size);
       set_colors_from(*color, &red, &green, &blue);
       cairo_set_source_rgb(cr, red, green, blue);
       cairo_rectangle(cr, x, y, 1, 1);
