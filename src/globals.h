@@ -19,5 +19,6 @@ struct GlobalData {
   size_t pixels;
   struct Palette palette;
   cairo_surface_t* surface;
+  size_t num_threads;
 };
 

@@ -14,7 +14,7 @@ void on_draw_button(GtkWidget *_widget, gpointer drawing_area) {
   /* Paint to the surface, where we store our state */
   cr = cairo_create (global_data.surface);
 
-  int* colors = malloc(sizeof(int) * pixels * pixels);
+  int* colors = calloc(pixels * pixels, sizeof(int));
   fill_mandelbrot(colors, pixels);
   draw_square(cr, colors, pixels);
 

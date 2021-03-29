@@ -4,6 +4,7 @@
 struct GlobalData global_data = {
     .pixels = 0,
     .palette = {.data = NULL, .len = 0},
+    .num_threads = 4,
 };
 
 int main(int argc, char **argv) {
