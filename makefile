@@ -1,8 +1,9 @@
 .PHONY: clean run debug all
 
 CC=gcc
-CFLAGS=-O2
-DEBUG_FLAGS=-g
+CFLAGS=-std=c11
+OPT_FLAGS=$(CFLAGS) -O2
+DEBUG_FLAGS=$(CFLAGS) -g
 IMG_SIZE=500
 FILES=src/*.c
 INCLUDE=`pkg-config --cflags gtk+-3.0` -I src/
@@ -19,10 +20,10 @@ debug: bin/main-debug
 	env IMG_SIZE=$(IMG_SIZE) gdb bin/main-debug
 
 bin/main: $(FILES)
-	$(CC) $(INCLUDE) $(LIBS) $(CFLAGS) $(FILES) -o bin/main 
+	$(CC) $(INCLUDE) $(LIBS) $(OPT_FLAGS) $(FILES) -o bin/main 
 
 bin/main-debug: $(FILES)
 	$(CC) $(INCLUDE) $(LIBS) $(DEBUG_FLAGS) $(FILES) -o bin/main-debug
 
 clean:
-	rm -rf bin/main
+	rm -rf bin/main bin/main-debug
