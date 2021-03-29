@@ -3,6 +3,7 @@
 CC=gcc
 CFLAGS=-O2
 DEBUG_FLAGS=-g
+IMG_SIZE=500
 FILES=src/*.c
 INCLUDE=`pkg-config --cflags gtk+-3.0` -I src/
 LIBS=`pkg-config --libs gtk+-3.0`
@@ -12,10 +13,10 @@ all: bin/main
 	@echo Wow such makefile
 
 run: bin/main
-	./bin/main --class float_please
+	env IMG_SIZE=$(IMG_SIZE) ./bin/main --class float_please
 
 debug: bin/main-debug
-	gdb bin/main-debug
+	env IMG_SIZE=$(IMG_SIZE) gdb bin/main-debug
 
 bin/main: $(FILES)
 	$(CC) $(INCLUDE) $(LIBS) $(CFLAGS) $(FILES) -o bin/main 
