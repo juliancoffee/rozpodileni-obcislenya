@@ -1,3 +1,6 @@
 #include <gtk/gtk.h>
 
-void on_draw_button(GtkWidget *_widget, GtkWidget *drawing_area);
+void draw_button_cb(GtkWidget *drawing_area);
+void calculate_button_cb(gpointer _data);
+void sync_button_cb(gpointer _data);
+void async_button_cb(gpointer _data);

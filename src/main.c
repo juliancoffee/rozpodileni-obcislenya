@@ -4,6 +4,9 @@
 struct GlobalData global_data = {
     .pixels = 0,
     .palette = {.data = NULL, .len = 0},
+    .set = NULL,
+    .surface = NULL,
+    .is_sync = true,
     .num_threads = 4,
 };
 

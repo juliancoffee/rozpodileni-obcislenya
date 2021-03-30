@@ -59,9 +59,11 @@ void fill_mandelbrot(int *colors, size_t pixels) {
     args->pixels = pixels;
     pthread_create(&thread_ids[n], NULL, mandelbrot_fill_range_helper, args);
   }
-  for (int n = 0; n < global_data.num_threads; n++) {
-    int res = pthread_join(thread_ids[n], NULL);
-    printf("join result: %d\n", res);
+  if (global_data.is_sync) {
+    for (int n = 0; n < global_data.num_threads; n++) {
+      int res = pthread_join(thread_ids[n], NULL);
+      printf("join result: %d\n", res);
+    }
   }
   free(thread_ids);
 }
