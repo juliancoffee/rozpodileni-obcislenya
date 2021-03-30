@@ -1,13 +1,13 @@
 .PHONY: clean run debug all
 
 CC=gcc
-CFLAGS=-std=c11 -lm
+CFLAGS=-std=c11 -Wall -Werror -Wextra -pedantic
 OPT_FLAGS=$(CFLAGS) -O2
 DEBUG_FLAGS=$(CFLAGS) -g
 IMG_SIZE=500
 FILES=src/*.c
 INCLUDE=`pkg-config --cflags gtk+-3.0` -I src/
-LIBS=`pkg-config --libs gtk+-3.0`
+LIBS=`pkg-config --libs gtk+-3.0` -lm
 
 all: bin/main
 	@echo ================

@@ -1,3 +1,4 @@
+#include "sets.h"
 #include "globals.h"
 #include "util.h"
 #include <complex.h>
@@ -28,11 +29,11 @@ static size_t mandelbrot_cell(double x, double y, double pixels) {
   return iters;
 }
 
-static void mandelbrot_fill_range(atomic_int *colors, size_t ystart, size_t yend,
-                                  size_t pixels) {
+static void mandelbrot_fill_range(atomic_int *colors, size_t ystart,
+                                  size_t yend, size_t pixels) {
   printf("ystart: %zu\n", ystart);
-  for (int y = ystart; y < yend; y++) {
-    for (int x = 0; x < pixels; x++) {
+  for (size_t y = ystart; y < yend; y++) {
+    for (size_t x = 0; x < pixels; x++) {
       atomic_int *to_set = element_at(colors, x, y, pixels);
       *to_set = mandelbrot_cell(x, y, pixels);
     }
@@ -48,7 +49,7 @@ static void *mandelbrot_fill_range_helper(void *arg) {
 
 void fill_mandelbrot(atomic_int *colors, size_t pixels) {
   pthread_t *thread_ids = malloc(sizeof(pthread_t) * global_data.num_threads);
-  for (int n = 0; n < global_data.num_threads; n++) {
+  for (size_t n = 0; n < global_data.num_threads; n++) {
     size_t start = n * pixels / global_data.num_threads;
     size_t end = (n + 1) * pixels / global_data.num_threads;
     printf("start: %zu\n", start);
@@ -60,7 +61,7 @@ void fill_mandelbrot(atomic_int *colors, size_t pixels) {
     pthread_create(&thread_ids[n], NULL, mandelbrot_fill_range_helper, args);
   }
   if (global_data.is_sync) {
-    for (int n = 0; n < global_data.num_threads; n++) {
+    for (size_t n = 0; n < global_data.num_threads; n++) {
       int res = pthread_join(thread_ids[n], NULL);
       printf("join result: %d\n", res);
     }

@@ -1,3 +1,4 @@
+#include "message.h"
 #include "globals.h"
 
 extern struct GlobalData global_data;

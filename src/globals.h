@@ -1,6 +1,7 @@
+#pragma once
 #include <gtk/gtk.h>
-#include <stdbool.h>
 #include <stdatomic.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 #define NUM_COLORS 500

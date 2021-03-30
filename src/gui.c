@@ -1,3 +1,4 @@
+#include "gui.h"
 #include "controls.h"
 #include "globals.h"
 #include "message.h"
@@ -16,6 +17,8 @@ static void clear_surface(void) {
 }
 
 static gboolean draw_cb(GtkWidget *_widget, cairo_t *cr, gpointer _data) {
+  (void)_widget;
+  (void)_data;
   g_message("DRAW\n");
   cairo_set_source_surface(cr, surface, 0, 0);
   cairo_paint(cr);
@@ -23,8 +26,10 @@ static gboolean draw_cb(GtkWidget *_widget, cairo_t *cr, gpointer _data) {
   return FALSE;
 }
 
-static gboolean configure_cb(GtkWidget *widget, GdkEventConfigure *event,
+static gboolean configure_cb(GtkWidget *widget, GdkEventConfigure *_event,
                              gpointer _data) {
+  (void)_event;
+  (void)_data;
   g_message("CONFIGURE\n");
   if (surface != NULL) {
     cairo_surface_destroy(surface);
@@ -76,11 +81,13 @@ static void activate(GtkApplication *app) {
 
   GtkWidget *text_view = gtk_text_view_new();
   GtkWidget *sync_button = gtk_button_new_with_label("Sync");
-  g_signal_connect_swapped(sync_button, "clicked", G_CALLBACK(sync_button_cb), text_view);
+  g_signal_connect_swapped(sync_button, "clicked", G_CALLBACK(sync_button_cb),
+                           text_view);
   gtk_container_add(GTK_CONTAINER(button_box), sync_button);
 
   GtkWidget *async_button = gtk_button_new_with_label("Async");
-  g_signal_connect_swapped(async_button, "clicked", G_CALLBACK(async_button_cb), text_view);
+  g_signal_connect_swapped(async_button, "clicked", G_CALLBACK(async_button_cb),
+                           text_view);
   gtk_container_add(GTK_CONTAINER(button_box), async_button);
 
   GtkWidget *exit_button = gtk_button_new_with_label("Exit");

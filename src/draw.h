@@ -1,4 +1,5 @@
-#include <stdatomic.h>
+#pragma once
 #include <gtk/gtk.h>
+#include <stdatomic.h>
 
-void draw_square(cairo_t *cr, atomic_int *colors, size_t size);
+int draw_square(cairo_t *cr, atomic_int *colors, size_t size);

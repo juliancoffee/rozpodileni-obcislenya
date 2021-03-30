@@ -1,8 +1,9 @@
+#include "controls.h"
 #include "draw.h"
 #include "globals.h"
+#include "message.h"
 #include "sets.h"
 #include "util.h"
-#include "message.h"
 #include <gtk/gtk.h>
 
 extern struct GlobalData global_data;
@@ -24,12 +25,10 @@ void draw_button_cb(GtkWidget *drawing_area) {
     free(colors);
     global_data.set = NULL;
   }
-  // TODO: figure out what to do with this in async scenario
-  // if we are freeing this memory at the time fill_mandelbrot is working
-  // it will be undefined behaviour (and most probably SEGFAULT)
 }
 
 void calculate_button_cb(gpointer _data) {
+  (void)_data;
   g_message("CALCULATE\n");
   size_t pixels = global_data.pixels;
   atomic_int *set = calloc(pixels * pixels, sizeof(atomic_int));

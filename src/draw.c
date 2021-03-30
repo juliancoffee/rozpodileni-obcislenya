@@ -1,3 +1,4 @@
+#include "draw.h"
 #include "globals.h"
 #include "util.h"
 #include <assert.h>
@@ -64,7 +65,7 @@ void init_palette(struct Palette *palette) {
 }
 
 // input: int color from 0 to NUM_COLORS
-static void set_colors_from(int color, double *red, double *green,
+static void set_colors_from(size_t color, double *red, double *green,
                             double *blue) {
   assert(color < global_data.palette.len);
   *red = global_data.palette.data[color - 1].red;
@@ -80,8 +81,8 @@ int draw_square(cairo_t *cr, atomic_int *colors, size_t size) {
     g_message("Wait a minute, this is not democracy. This is anal sex.\n");
     return -1;
   }
-  for (int x = 0; x < size; x++) {
-    for (int y = 0; y < size; y++) {
+  for (size_t x = 0; x < size; x++) {
+    for (size_t y = 0; y < size; y++) {
       double red = 0;
       double green = 0;
       double blue = 0;
