@@ -1,7 +1,7 @@
+#include "globals.h"
+#include "util.h"
 #include <assert.h>
 #include <gtk/gtk.h>
-#include "util.h"
-#include "globals.h"
 
 extern struct GlobalData global_data;
 
@@ -54,22 +54,22 @@ static void set_rgb(double ratio, double *red, double *green, double *blue) {
 
 void init_palette(struct Palette *palette) {
   const size_t num_colors = NUM_COLORS;
-  palette->data = (struct RGB*)malloc(sizeof(struct RGB) * num_colors);
+  palette->data = (struct RGB *)malloc(sizeof(struct RGB) * num_colors);
   palette->len = num_colors;
   for (size_t color = 0; color < num_colors; color++) {
-    float colorf = (float) color;
-    set_rgb(colorf / num_colors, &palette->data[color].red, &palette->data[color].green, &palette->data[color].blue);
+    float colorf = (float)color;
+    set_rgb(colorf / num_colors, &palette->data[color].red,
+            &palette->data[color].green, &palette->data[color].blue);
   }
 }
 
-
-//input: int color from 0 to NUM_COLORS
+// input: int color from 0 to NUM_COLORS
 static void set_colors_from(int color, double *red, double *green,
                             double *blue) {
   if (global_data.palette.data == NULL) {
     init_palette(&global_data.palette);
   }
-  assert (color < global_data.palette.len);
+  assert(color < global_data.palette.len);
   *red = global_data.palette.data[color - 1].red;
   *green = global_data.palette.data[color - 1].green;
   *blue = global_data.palette.data[color - 1].blue;

@@ -1,8 +1,8 @@
-#include <gtk/gtk.h>
-#include "draw.h"
-#include "util.h"
-#include "globals.h"
 #include "controls.h"
+#include "draw.h"
+#include "globals.h"
+#include "util.h"
+#include <gtk/gtk.h>
 
 static cairo_surface_t *surface = NULL;
 extern struct GlobalData global_data;
@@ -58,7 +58,8 @@ static void activate(GtkApplication *app) {
 
   GtkWidget *drawing_area = gtk_drawing_area_new();
   g_signal_connect(drawing_area, "draw", G_CALLBACK(draw_cb), NULL);
-  g_signal_connect(drawing_area, "configure-event", G_CALLBACK(configure_cb), NULL);
+  g_signal_connect(drawing_area, "configure-event", G_CALLBACK(configure_cb),
+                   NULL);
   gtk_container_add(GTK_CONTAINER(frame), drawing_area);
 
   GtkWidget *button = gtk_button_new_with_label("Draw");
@@ -73,7 +74,7 @@ static void activate(GtkApplication *app) {
   gtk_widget_show_all(window);
 }
 
-int start_app(int argc, char** argv) {
+int start_app(int argc, char **argv) {
   GtkApplication *app = gtk_application_new("org.example.mandelbrot-draw",
                                             G_APPLICATION_FLAGS_NONE);
 

@@ -1,6 +1,6 @@
+#include <gtk/gtk.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <gtk/gtk.h>
 
 #define NUM_COLORS 500
 
@@ -18,7 +18,6 @@ struct Palette {
 struct GlobalData {
   size_t pixels;
   struct Palette palette;
-  cairo_surface_t* surface;
+  cairo_surface_t *surface;
   size_t num_threads;
 };
-

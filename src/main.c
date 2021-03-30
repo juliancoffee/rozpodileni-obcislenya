@@ -1,5 +1,5 @@
-#include "gui.h"
 #include "globals.h"
+#include "gui.h"
 
 struct GlobalData global_data = {
     .pixels = 0,
