@@ -63,4 +63,5 @@ void fill_mandelbrot(int *colors, size_t pixels) {
     int res = pthread_join(thread_ids[n], NULL);
     printf("join result: %d\n", res);
   }
+  free(thread_ids);
 }

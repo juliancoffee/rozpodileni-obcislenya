@@ -17,6 +17,7 @@ void on_draw_button(GtkWidget *_widget, gpointer drawing_area) {
   int* colors = calloc(pixels * pixels, sizeof(int));
   fill_mandelbrot(colors, pixels);
   draw_square(cr, colors, pixels);
+  free(colors);
 
   /* actually redraw */
   gtk_widget_queue_draw_area (drawing_area, 0, 0, pixels, pixels);
