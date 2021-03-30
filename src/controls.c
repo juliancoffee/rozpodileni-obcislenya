@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "sets.h"
 #include "util.h"
+#include "message.h"
 #include <gtk/gtk.h>
 
 extern struct GlobalData global_data;
@@ -12,7 +13,7 @@ void draw_button_cb(GtkWidget *drawing_area) {
 
   /* Paint to the surface, where we store our state */
   cr = cairo_create(global_data.surface);
-  int *colors = global_data.set;
+  atomic_int *colors = global_data.set;
   draw_square(cr, colors, pixels);
 
   /* Actually redraw */
@@ -31,10 +32,23 @@ void draw_button_cb(GtkWidget *drawing_area) {
 void calculate_button_cb(gpointer _data) {
   g_message("CALCULATE\n");
   size_t pixels = global_data.pixels;
-  int *set = calloc(pixels * pixels, sizeof(int));
+  atomic_int *set = calloc(pixels * pixels, sizeof(atomic_int));
   global_data.set = set;
   fill_mandelbrot(set, pixels);
 }
 
-void sync_button_cb(gpointer _data) { global_data.is_sync = true; }
-void async_button_cb(gpointer _data) { global_data.is_sync = false; }
+void sync_button_cb(GtkWidget *text_view) {
+  global_data.is_sync = true;
+  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *)text_view);
+  char *msg = info_text();
+  gtk_text_buffer_set_text(buf, msg, -1);
+  free(msg);
+}
+
+void async_button_cb(GtkWidget *text_view) {
+  global_data.is_sync = false;
+  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *)text_view);
+  char *msg = info_text();
+  gtk_text_buffer_set_text(buf, msg, -1);
+  free(msg);
+}

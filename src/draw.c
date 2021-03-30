@@ -72,7 +72,7 @@ static void set_colors_from(int color, double *red, double *green,
   *blue = global_data.palette.data[color - 1].blue;
 }
 
-int draw_square(cairo_t *cr, int *colors, size_t size) {
+int draw_square(cairo_t *cr, atomic_int *colors, size_t size) {
   if (global_data.palette.data == NULL) {
     init_palette(&global_data.palette);
   }
@@ -85,7 +85,7 @@ int draw_square(cairo_t *cr, int *colors, size_t size) {
       double red = 0;
       double green = 0;
       double blue = 0;
-      int *color = element_at(colors, x, y, size);
+      atomic_int *color = element_at(colors, x, y, size);
       set_colors_from(*color, &red, &green, &blue);
       cairo_set_source_rgb(cr, red, green, blue);
       cairo_rectangle(cr, x, y, 1, 1);

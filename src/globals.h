@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
+#include <stdatomic.h>
 #include <stddef.h>
 
 #define NUM_COLORS 500
@@ -19,7 +20,7 @@ struct GlobalData {
   size_t pixels;
   struct Palette palette;
   cairo_surface_t *surface;
-  int *set;
+  atomic_int *set;
   bool is_sync;
   size_t num_threads;
 };

@@ -74,12 +74,13 @@ static void activate(GtkApplication *app) {
                    NULL);
   gtk_container_add(GTK_CONTAINER(button_box), calculate_button);
 
+  GtkWidget *text_view = gtk_text_view_new();
   GtkWidget *sync_button = gtk_button_new_with_label("Sync");
-  g_signal_connect(sync_button, "clicked", G_CALLBACK(sync_button_cb), NULL);
+  g_signal_connect_swapped(sync_button, "clicked", G_CALLBACK(sync_button_cb), text_view);
   gtk_container_add(GTK_CONTAINER(button_box), sync_button);
 
   GtkWidget *async_button = gtk_button_new_with_label("Async");
-  g_signal_connect(async_button, "clicked", G_CALLBACK(async_button_cb), NULL);
+  g_signal_connect_swapped(async_button, "clicked", G_CALLBACK(async_button_cb), text_view);
   gtk_container_add(GTK_CONTAINER(button_box), async_button);
 
   GtkWidget *exit_button = gtk_button_new_with_label("Exit");
@@ -87,7 +88,6 @@ static void activate(GtkApplication *app) {
                            G_CALLBACK(gtk_widget_destroy), window);
   gtk_container_add(GTK_CONTAINER(button_box), exit_button);
 
-  GtkWidget *text_view = gtk_text_view_new();
   GtkTextBuffer *buffer = gtk_text_view_get_buffer((GtkTextView *)text_view);
 
   char *msg_buf = info_text();

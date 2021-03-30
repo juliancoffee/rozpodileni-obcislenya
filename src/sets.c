@@ -5,7 +5,7 @@
 extern struct GlobalData global_data;
 
 struct PackedArgs {
-  int *colors;
+  atomic_int *colors;
   size_t ystart;
   size_t yend;
   size_t pixels;
@@ -28,12 +28,12 @@ static size_t mandelbrot_cell(double x, double y, double pixels) {
   return iters;
 }
 
-static void mandelbrot_fill_range(int *colors, size_t ystart, size_t yend,
+static void mandelbrot_fill_range(atomic_int *colors, size_t ystart, size_t yend,
                                   size_t pixels) {
   printf("ystart: %zu\n", ystart);
   for (int y = ystart; y < yend; y++) {
     for (int x = 0; x < pixels; x++) {
-      int *to_set = element_at(colors, x, y, pixels);
+      atomic_int *to_set = element_at(colors, x, y, pixels);
       *to_set = mandelbrot_cell(x, y, pixels);
     }
   }
@@ -46,7 +46,7 @@ static void *mandelbrot_fill_range_helper(void *arg) {
   return NULL;
 }
 
-void fill_mandelbrot(int *colors, size_t pixels) {
+void fill_mandelbrot(atomic_int *colors, size_t pixels) {
   pthread_t *thread_ids = malloc(sizeof(pthread_t) * global_data.num_threads);
   for (int n = 0; n < global_data.num_threads; n++) {
     size_t start = n * pixels / global_data.num_threads;
