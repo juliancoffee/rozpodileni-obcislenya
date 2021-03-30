@@ -12,12 +12,11 @@ void draw_button_cb(GtkWidget *drawing_area) {
 
   /* Paint to the surface, where we store our state */
   cr = cairo_create(global_data.surface);
-  int* colors = global_data.set;
+  int *colors = global_data.set;
   draw_square(cr, colors, pixels);
 
   /* Actually redraw */
   gtk_widget_queue_draw_area(drawing_area, 0, 0, pixels, pixels);
-
 
   /* Freeing resources */
   if (global_data.is_sync) {
@@ -37,10 +36,5 @@ void calculate_button_cb(gpointer _data) {
   fill_mandelbrot(set, pixels);
 }
 
-
-void sync_button_cb(gpointer _data) {
-  global_data.is_sync = true;
-}
-void async_button_cb(gpointer _data) {
-  global_data.is_sync = false;
-}
+void sync_button_cb(gpointer _data) { global_data.is_sync = true; }
+void async_button_cb(gpointer _data) { global_data.is_sync = false; }
