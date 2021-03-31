@@ -33,7 +33,7 @@ void calculate_button_cb(gpointer _data) {
   size_t pixels = global_data.pixels;
   atomic_int *set = calloc(pixels * pixels, sizeof(atomic_int));
   global_data.set = set;
-  fill_mandelbrot(set, pixels);
+  fill_mandelbrot(set, pixels, global_data.is_sync, global_data.num_threads);
 }
 
 void sync_button_cb(GtkWidget *text_view) {

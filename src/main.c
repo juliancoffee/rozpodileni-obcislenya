@@ -14,7 +14,12 @@ struct GlobalData global_data = {
 // TODO: implement pausing
 // TODO: implement clearing of image
 int main(int argc, char **argv) {
-  global_data.pixels = atoi(getenv("IMG_SIZE"));
+  char *img_size_request = getenv("IMV_SIZE");
+  if (img_size_request != NULL) {
+    global_data.pixels = atoi(img_size_request);
+  } else {
+    global_data.pixels = 500;
+  }
   int status = start_app(argc, argv);
   return status;
 }
