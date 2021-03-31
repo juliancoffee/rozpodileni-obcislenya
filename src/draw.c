@@ -53,7 +53,7 @@ static void set_rgb(double ratio, double *red, double *green, double *blue) {
   }
 }
 
-void init_palette(struct Palette *palette) {
+static void init_palette(struct Palette *palette) {
   const size_t num_colors = NUM_COLORS;
   palette->data = (struct RGB *)malloc(sizeof(struct RGB) * num_colors);
   palette->len = num_colors;
