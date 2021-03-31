@@ -1,10 +1,7 @@
 #include "draw.h"
-#include "globals.h"
 #include "util.h"
 #include <assert.h>
 #include <gtk/gtk.h>
-
-extern struct GlobalData global_data;
 
 // input: ratio is between 0 to 1
 // output: rgb color
@@ -53,31 +50,39 @@ static void set_rgb(double ratio, double *red, double *green, double *blue) {
   }
 }
 
-static void init_palette(struct Palette *palette) {
+static void init_palette(struct palette_t *palette) {
   const size_t num_colors = NUM_COLORS;
-  palette->data = (struct RGB *) malloc(sizeof(struct RGB) * num_colors);
+  palette->data = calloc(num_colors, sizeof(struct rgb_tuple_t));
   palette->len = num_colors;
+  struct rgb_tuple_t *data = palette->data;
   for (size_t color = 0; color < num_colors; color++) {
     float colorf = (float) color;
     set_rgb(colorf / num_colors,
-            &palette->data[color].red,
-            &palette->data[color].green,
-            &palette->data[color].blue);
+            &data[color].red,
+            &data[color].green,
+            &data[color].blue);
   }
 }
 
 // input: int color from 0 to NUM_COLORS
-static void
-set_colors_from(size_t color, double *red, double *green, double *blue) {
-  assert(color < global_data.palette.len);
-  *red = global_data.palette.data[color - 1].red;
-  *green = global_data.palette.data[color - 1].green;
-  *blue = global_data.palette.data[color - 1].blue;
+static void set_colors_from(size_t color,
+                            double *red,
+                            double *green,
+                            double *blue,
+                            struct palette_t palette) {
+  assert(color < palette.len);
+  struct rgb_tuple_t *data = palette.data;
+  *red = data[color - 1].red;
+  *green = data[color - 1].green;
+  *blue = data[color - 1].blue;
 }
 
-int draw_square(cairo_t *cr, atomic_int *colors, size_t size) {
-  if (global_data.palette.data == NULL) {
-    init_palette(&global_data.palette);
+int draw_square(cairo_t *cr,
+                atomic_int *colors,
+                size_t size,
+                struct palette_t palette) {
+  if (palette.data == NULL) {
+    init_palette(&palette);
   }
   if (colors == NULL) {
     g_warning("colors == NULL, set isn't initalized\n");
@@ -89,7 +94,7 @@ int draw_square(cairo_t *cr, atomic_int *colors, size_t size) {
       double green = 0;
       double blue = 0;
       atomic_int *color = element_at(colors, x, y, size);
-      set_colors_from(*color, &red, &green, &blue);
+      set_colors_from(*color, &red, &green, &blue, palette);
       cairo_set_source_rgb(cr, red, green, blue);
       cairo_rectangle(cr, x, y, 1, 1);
       cairo_fill(cr);

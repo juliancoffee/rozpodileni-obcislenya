@@ -24,10 +24,10 @@ GtkWidget *my_frame(size_t pixels) {
   return frame;
 }
 
-GtkWidget *my_text_view(void) {
+GtkWidget *my_text_view(struct computation_context_t *ctx) {
   GtkWidget *text_view = gtk_text_view_new();
   GtkTextBuffer *buffer = gtk_text_view_get_buffer((GtkTextView *) text_view);
-  char *msg_buf = info_text();
+  char *msg_buf = info_text(ctx);
   gtk_text_buffer_set_text(buffer, msg_buf, -1);
   free(msg_buf);
   return text_view;

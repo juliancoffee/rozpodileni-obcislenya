@@ -6,18 +6,19 @@
 #include "util.h"
 #include <gtk/gtk.h>
 
-extern struct GlobalData global_data;
-
-void draw_button_cb(GtkWidget *drawing_area) {
+void draw_button_cb(struct binded_widget_t *bind) {
+  g_debug("DRAW\n");
   cairo_t *cr;
-  struct computation_context_t *ctx = global_data.comp_ctx;
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+  struct drawing_context_t *draw_ctx = bind->data->draw_ctx;
   size_t pixels = ctx->pixels;
+  GtkWidget *drawing_area = bind->widget;
   bool is_sync = ctx->is_sync;
 
   /* Paint to the surface, where we store our state */
-  cr = cairo_create(global_data.surface);
+  cr = cairo_create(draw_ctx->surface);
   atomic_int *colors = ctx->set;
-  draw_square(cr, colors, pixels);
+  draw_square(cr, colors, pixels, draw_ctx->palette);
 
   /* Actually redraw */
   gtk_widget_queue_draw_area(drawing_area, 0, 0, pixels, pixels);
@@ -42,18 +43,22 @@ void compute_button_cb(struct computation_context_t *ctx) {
   fill_mandelbrot(set, pixels, is_sync, num_threads);
 }
 
-void sync_button_cb(GtkWidget *text_view) {
-  global_data.comp_ctx->is_sync = true;
+void sync_button_cb(struct binded_widget_t *bind) {
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+  GtkWidget *text_view = bind->widget;
+  ctx->is_sync = true;
   GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
-  char *msg = info_text();
+  char *msg = info_text(ctx);
   gtk_text_buffer_set_text(buf, msg, -1);
   free(msg);
 }
 
-void async_button_cb(GtkWidget *text_view) {
-  global_data.comp_ctx->is_sync = false;
+void async_button_cb(struct binded_widget_t *bind) {
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+  GtkWidget *text_view = bind->widget;
+  ctx->is_sync = false;
   GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
-  char *msg = info_text();
+  char *msg = info_text(ctx);
   gtk_text_buffer_set_text(buf, msg, -1);
   free(msg);
 }

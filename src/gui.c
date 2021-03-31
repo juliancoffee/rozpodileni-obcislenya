@@ -1,11 +1,19 @@
 #include "gui.h"
 #include "controls.h"
 #include "globals.h"
+#include "util.h"
 #include "widgets.h"
 #include <gtk/gtk.h>
 
 static cairo_surface_t *surface = NULL;
-extern struct GlobalData global_data;
+
+static struct binded_widget_t *bind(GtkWidget *widget,
+                                    struct GlobalData *data) {
+  struct binded_widget_t *bundle = NEW(struct binded_widget_t);
+  bundle->widget = widget;
+  bundle->data = data;
+  return bundle;
+}
 
 static void clear_surface(void) {
   cairo_t *cr;
@@ -18,18 +26,16 @@ static void clear_surface(void) {
 static gboolean draw_cb(GtkWidget *_widget, cairo_t *cr, gpointer _data) {
   (void) _widget;
   (void) _data;
-  g_debug("DRAW\n");
   cairo_set_source_surface(cr, surface, 0, 0);
   cairo_paint(cr);
 
   return FALSE;
 }
 
-static gboolean
-configure_cb(GtkWidget *widget, GdkEventConfigure *_event, gpointer _data) {
+static gboolean configure_cb(GtkWidget *widget,
+                             GdkEventConfigure *_event,
+                             struct drawing_context_t *ctx) {
   (void) _event;
-  (void) _data;
-  g_debug("CONFIGURE\n");
   if (surface != NULL) {
     cairo_surface_destroy(surface);
   }
@@ -41,11 +47,15 @@ configure_cb(GtkWidget *widget, GdkEventConfigure *_event, gpointer _data) {
       gtk_widget_get_allocated_height(widget));
 
   clear_surface();
-  global_data.surface = surface;
+  ctx->surface = surface;
   return TRUE;
 }
 
-static void activate(GtkApplication *app) {
+static void activate(GtkApplication *app, struct GlobalData *data) {
+  /* Getting data */
+  struct computation_context_t *comp_ctx = data->comp_ctx;
+  struct drawing_context_t *draw_ctx = data->draw_ctx;
+
   /* Widget creation */
   GtkWidget *window = my_window(app);
 
@@ -53,7 +63,7 @@ static void activate(GtkApplication *app) {
 
   GtkWidget *left_box = my_box(GTK_ORIENTATION_VERTICAL);
   GtkWidget *button_box = my_button_box(GTK_ORIENTATION_VERTICAL);
-  GtkWidget *text_view = my_text_view();
+  GtkWidget *text_view = my_text_view(comp_ctx);
 
   GtkWidget *draw_button = gtk_button_new_with_label("Draw");
   GtkWidget *calculate_button = gtk_button_new_with_label("Calculate");
@@ -61,7 +71,7 @@ static void activate(GtkApplication *app) {
   GtkWidget *async_button = gtk_button_new_with_label("Async");
   GtkWidget *exit_button = gtk_button_new_with_label("Exit");
 
-  GtkWidget *frame = my_frame(global_data.comp_ctx->pixels);
+  GtkWidget *frame = my_frame(data->comp_ctx->pixels);
   GtkWidget *drawing_area = gtk_drawing_area_new();
 
   /* Add elements to containers */
@@ -80,27 +90,34 @@ static void activate(GtkApplication *app) {
   /* Add signal callbacks */
   g_signal_connect(drawing_area, "draw", G_CALLBACK(draw_cb), NULL);
   g_signal_connect(
-      drawing_area, "configure-event", G_CALLBACK(configure_cb), NULL);
-  g_signal_connect_swapped(
-      draw_button, "clicked", G_CALLBACK(draw_button_cb), drawing_area);
+      drawing_area, "configure-event", G_CALLBACK(configure_cb), draw_ctx);
+
+  g_signal_connect_swapped(draw_button,
+                           "clicked",
+                           G_CALLBACK(draw_button_cb),
+                           bind(drawing_area, data));
 
   g_signal_connect_swapped(
-      calculate_button, "clicked", G_CALLBACK(compute_button_cb), global_data.comp_ctx);
-  g_signal_connect_swapped(
-      sync_button, "clicked", G_CALLBACK(sync_button_cb), text_view);
-  g_signal_connect_swapped(
-      async_button, "clicked", G_CALLBACK(async_button_cb), text_view);
+      calculate_button, "clicked", G_CALLBACK(compute_button_cb), comp_ctx);
+  g_signal_connect_swapped(sync_button,
+                           "clicked",
+                           G_CALLBACK(sync_button_cb),
+                           bind(text_view, data));
+  g_signal_connect_swapped(async_button,
+                           "clicked",
+                           G_CALLBACK(async_button_cb),
+                           bind(text_view, data));
   g_signal_connect_swapped(
       exit_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
 
   gtk_widget_show_all(window);
 }
 
-int start_app(int argc, char **argv) {
+int start_app(int argc, char **argv, struct GlobalData *data) {
   GtkApplication *app = gtk_application_new("org.example.mandelbrot-draw",
                                             G_APPLICATION_FLAGS_NONE);
 
-  g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
+  g_signal_connect(app, "activate", G_CALLBACK(activate), data);
   int status = g_application_run(G_APPLICATION(app), argc, argv);
   g_object_unref(app);
   return status;

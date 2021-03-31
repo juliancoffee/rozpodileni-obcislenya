@@ -56,7 +56,7 @@ void fill_mandelbrot(atomic_int *colors,
   for (size_t n = 0; n < num_threads; n++) {
     size_t start = n * pixels / num_threads;
     size_t end = (n + 1) * pixels / num_threads;
-    struct PackedArgs *args = malloc(sizeof(struct PackedArgs));
+    struct PackedArgs *args = NEW(struct PackedArgs);
     args->colors = colors;
     args->ystart = start;
     args->yend = end;

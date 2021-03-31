@@ -1,10 +1,7 @@
 #include "message.h"
 #include "globals.h"
 
-extern struct GlobalData global_data;
-
-char *info_text(void) {
-  struct computation_context_t *ctx = global_data.comp_ctx;
+char *info_text(struct computation_context_t *ctx) {
   bool is_sync = ctx->is_sync;
   size_t num_threads = ctx->num_threads;
   size_t pixels = ctx->pixels;

@@ -6,14 +6,14 @@
 
 #define NUM_COLORS 500
 
-struct RGB {
+struct rgb_tuple_t {
   double red;
   double green;
   double blue;
 };
 
-struct Palette {
-  struct RGB *data;
+struct palette_t {
+  struct rgb_tuple_t *data;
   size_t len;
 };
 
@@ -24,8 +24,17 @@ struct computation_context_t {
   size_t num_threads;
 };
 
+struct drawing_context_t {
+  struct palette_t palette;
+  cairo_surface_t *surface;
+};
+
 struct GlobalData {
   struct computation_context_t *comp_ctx;
-  struct Palette palette;
-  cairo_surface_t *surface;
+  struct drawing_context_t *draw_ctx;
+};
+
+struct binded_widget_t {
+  GtkWidget *widget;
+  struct GlobalData *data;
 };
