@@ -52,10 +52,12 @@ void fill_mandelbrot(atomic_int *colors,
                      bool is_sync,
                      size_t num_threads) {
 
+  // memory management: freed in the end of the function
   pthread_t *thread_ids = malloc(sizeof(pthread_t) * num_threads);
   for (size_t n = 0; n < num_threads; n++) {
     size_t start = n * pixels / num_threads;
     size_t end = (n + 1) * pixels / num_threads;
+    // memory management: freed in callback function
     struct PackedArgs *args = NEW(struct PackedArgs);
     args->colors = colors;
     args->ystart = start;

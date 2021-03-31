@@ -11,8 +11,8 @@ void draw_button_cb(struct binded_widget_t *bind) {
   cairo_t *cr;
   struct computation_context_t *ctx = bind->data->comp_ctx;
   struct drawing_context_t *draw_ctx = bind->data->draw_ctx;
-  size_t pixels = ctx->pixels;
   GtkWidget *drawing_area = bind->widget;
+  size_t pixels = ctx->pixels;
   bool is_sync = ctx->is_sync;
 
   /* Paint to the surface, where we store our state */

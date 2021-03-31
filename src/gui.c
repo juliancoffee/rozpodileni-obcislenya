@@ -7,6 +7,7 @@
 
 static cairo_surface_t *surface = NULL;
 
+// memory management: caller owns the data
 static struct binded_widget_t *bind(GtkWidget *widget,
                                     struct GlobalData *data) {
   struct binded_widget_t *bundle = NEW(struct binded_widget_t);
