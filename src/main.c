@@ -10,6 +10,9 @@ struct GlobalData global_data = {
     .num_threads = 4,
 };
 
+// TODO: increase and decrease number of threads
+// TODO: implement pausing
+// TODO: implement clearing of image
 int main(int argc, char **argv) {
   global_data.pixels = atoi(getenv("IMG_SIZE"));
   int status = start_app(argc, argv);
