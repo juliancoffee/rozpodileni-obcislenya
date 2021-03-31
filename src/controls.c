@@ -28,7 +28,7 @@ void draw_button_cb(GtkWidget *drawing_area) {
 }
 
 void calculate_button_cb(gpointer _data) {
-  (void)_data;
+  (void) _data;
   g_message("CALCULATE\n");
   size_t pixels = global_data.pixels;
   atomic_int *set = calloc(pixels * pixels, sizeof(atomic_int));
@@ -38,7 +38,7 @@ void calculate_button_cb(gpointer _data) {
 
 void sync_button_cb(GtkWidget *text_view) {
   global_data.is_sync = true;
-  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *)text_view);
+  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
   char *msg = info_text();
   gtk_text_buffer_set_text(buf, msg, -1);
   free(msg);
@@ -46,7 +46,7 @@ void sync_button_cb(GtkWidget *text_view) {
 
 void async_button_cb(GtkWidget *text_view) {
   global_data.is_sync = false;
-  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *)text_view);
+  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
   char *msg = info_text();
   gtk_text_buffer_set_text(buf, msg, -1);
   free(msg);

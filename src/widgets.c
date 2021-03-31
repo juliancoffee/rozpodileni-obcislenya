@@ -14,7 +14,7 @@ GtkWidget *my_box(GtkOrientation orientation) {
 
 GtkWidget *my_button_box(GtkOrientation orientation) {
   GtkWidget *button_box = gtk_button_box_new(orientation);
-  gtk_button_box_set_layout((GtkButtonBox *)button_box, GTK_BUTTONBOX_SPREAD);
+  gtk_button_box_set_layout((GtkButtonBox *) button_box, GTK_BUTTONBOX_SPREAD);
   return button_box;
 }
 
@@ -26,7 +26,7 @@ GtkWidget *my_frame(size_t pixels) {
 
 GtkWidget *my_text_view(void) {
   GtkWidget *text_view = gtk_text_view_new();
-  GtkTextBuffer *buffer = gtk_text_view_get_buffer((GtkTextView *)text_view);
+  GtkTextBuffer *buffer = gtk_text_view_get_buffer((GtkTextView *) text_view);
   char *msg_buf = info_text();
   gtk_text_buffer_set_text(buffer, msg_buf, -1);
   free(msg_buf);

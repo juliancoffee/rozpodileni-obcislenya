@@ -27,8 +27,10 @@ static size_t mandelbrot_cell(double x, double y, double pixels) {
   return iters;
 }
 
-static void mandelbrot_fill_range(atomic_int *colors, size_t ystart,
-                                  size_t yend, size_t pixels) {
+static void mandelbrot_fill_range(atomic_int *colors,
+                                  size_t ystart,
+                                  size_t yend,
+                                  size_t pixels) {
   for (size_t y = ystart; y < yend; y++) {
     for (size_t x = 0; x < pixels; x++) {
       atomic_int *to_set = element_at(colors, x, y, pixels);
@@ -44,7 +46,9 @@ static void *mandelbrot_fill_range_helper(void *arg) {
   return NULL;
 }
 
-void fill_mandelbrot(atomic_int *colors, size_t pixels, bool is_sync,
+void fill_mandelbrot(atomic_int *colors,
+                     size_t pixels,
+                     bool is_sync,
                      size_t num_threads) {
 
   pthread_t *thread_ids = malloc(sizeof(pthread_t) * num_threads);

@@ -16,8 +16,8 @@ static void clear_surface(void) {
 }
 
 static gboolean draw_cb(GtkWidget *_widget, cairo_t *cr, gpointer _data) {
-  (void)_widget;
-  (void)_data;
+  (void) _widget;
+  (void) _data;
   g_message("DRAW\n");
   cairo_set_source_surface(cr, surface, 0, 0);
   cairo_paint(cr);
@@ -25,17 +25,18 @@ static gboolean draw_cb(GtkWidget *_widget, cairo_t *cr, gpointer _data) {
   return FALSE;
 }
 
-static gboolean configure_cb(GtkWidget *widget, GdkEventConfigure *_event,
-                             gpointer _data) {
-  (void)_event;
-  (void)_data;
+static gboolean
+configure_cb(GtkWidget *widget, GdkEventConfigure *_event, gpointer _data) {
+  (void) _event;
+  (void) _data;
   g_message("CONFIGURE\n");
   if (surface != NULL) {
     cairo_surface_destroy(surface);
   }
 
   surface = gdk_window_create_similar_surface(
-      gtk_widget_get_window(widget), CAIRO_CONTENT_COLOR,
+      gtk_widget_get_window(widget),
+      CAIRO_CONTENT_COLOR,
       gtk_widget_get_allocated_width(widget),
       gtk_widget_get_allocated_height(widget));
 
@@ -78,18 +79,18 @@ static void activate(GtkApplication *app) {
 
   /* Add signal callbacks */
   g_signal_connect(drawing_area, "draw", G_CALLBACK(draw_cb), NULL);
-  g_signal_connect(drawing_area, "configure-event", G_CALLBACK(configure_cb),
-                   NULL);
-  g_signal_connect_swapped(draw_button, "clicked", G_CALLBACK(draw_button_cb),
-                           drawing_area);
-  g_signal_connect(calculate_button, "clicked", G_CALLBACK(calculate_button_cb),
-                   NULL);
-  g_signal_connect_swapped(sync_button, "clicked", G_CALLBACK(sync_button_cb),
-                           text_view);
-  g_signal_connect_swapped(async_button, "clicked", G_CALLBACK(async_button_cb),
-                           text_view);
-  g_signal_connect_swapped(exit_button, "clicked",
-                           G_CALLBACK(gtk_widget_destroy), window);
+  g_signal_connect(
+      drawing_area, "configure-event", G_CALLBACK(configure_cb), NULL);
+  g_signal_connect_swapped(
+      draw_button, "clicked", G_CALLBACK(draw_button_cb), drawing_area);
+  g_signal_connect(
+      calculate_button, "clicked", G_CALLBACK(calculate_button_cb), NULL);
+  g_signal_connect_swapped(
+      sync_button, "clicked", G_CALLBACK(sync_button_cb), text_view);
+  g_signal_connect_swapped(
+      async_button, "clicked", G_CALLBACK(async_button_cb), text_view);
+  g_signal_connect_swapped(
+      exit_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
 
   gtk_widget_show_all(window);
 }

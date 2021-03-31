@@ -11,10 +11,10 @@ extern struct GlobalData global_data;
 static void set_rgb(double ratio, double *red, double *green, double *blue) {
   // we want to normalize ratio so that it fits in to 6 regions
   // where each region is 256 units long
-  int normalized = (int)(ratio * 256 * 6);
+  int normalized = (int) (ratio * 256 * 6);
 
   // find the distance to the start of the closest region
-  double x = (double)(normalized % 256) / 256;
+  double x = (double) (normalized % 256) / 256;
 
   *red = 0;
   *green = 0;
@@ -55,18 +55,20 @@ static void set_rgb(double ratio, double *red, double *green, double *blue) {
 
 static void init_palette(struct Palette *palette) {
   const size_t num_colors = NUM_COLORS;
-  palette->data = (struct RGB *)malloc(sizeof(struct RGB) * num_colors);
+  palette->data = (struct RGB *) malloc(sizeof(struct RGB) * num_colors);
   palette->len = num_colors;
   for (size_t color = 0; color < num_colors; color++) {
-    float colorf = (float)color;
-    set_rgb(colorf / num_colors, &palette->data[color].red,
-            &palette->data[color].green, &palette->data[color].blue);
+    float colorf = (float) color;
+    set_rgb(colorf / num_colors,
+            &palette->data[color].red,
+            &palette->data[color].green,
+            &palette->data[color].blue);
   }
 }
 
 // input: int color from 0 to NUM_COLORS
-static void set_colors_from(size_t color, double *red, double *green,
-                            double *blue) {
+static void
+set_colors_from(size_t color, double *red, double *green, double *blue) {
   assert(color < global_data.palette.len);
   *red = global_data.palette.data[color - 1].red;
   *green = global_data.palette.data[color - 1].green;
