@@ -17,11 +17,15 @@ struct Palette {
   size_t len;
 };
 
-struct GlobalData {
+struct computation_context_t {
   size_t pixels;
-  struct Palette palette;
-  cairo_surface_t *surface;
   atomic_int *set;
   bool is_sync;
   size_t num_threads;
+};
+
+struct GlobalData {
+  struct computation_context_t *comp_ctx;
+  struct Palette palette;
+  cairo_surface_t *surface;
 };

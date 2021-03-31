@@ -61,7 +61,7 @@ static void activate(GtkApplication *app) {
   GtkWidget *async_button = gtk_button_new_with_label("Async");
   GtkWidget *exit_button = gtk_button_new_with_label("Exit");
 
-  GtkWidget *frame = my_frame(global_data.pixels);
+  GtkWidget *frame = my_frame(global_data.comp_ctx->pixels);
   GtkWidget *drawing_area = gtk_drawing_area_new();
 
   /* Add elements to containers */
@@ -83,8 +83,9 @@ static void activate(GtkApplication *app) {
       drawing_area, "configure-event", G_CALLBACK(configure_cb), NULL);
   g_signal_connect_swapped(
       draw_button, "clicked", G_CALLBACK(draw_button_cb), drawing_area);
-  g_signal_connect(
-      calculate_button, "clicked", G_CALLBACK(calculate_button_cb), NULL);
+
+  g_signal_connect_swapped(
+      calculate_button, "clicked", G_CALLBACK(compute_button_cb), global_data.comp_ctx);
   g_signal_connect_swapped(
       sync_button, "clicked", G_CALLBACK(sync_button_cb), text_view);
   g_signal_connect_swapped(

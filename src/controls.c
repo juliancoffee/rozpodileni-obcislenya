@@ -10,34 +10,40 @@ extern struct GlobalData global_data;
 
 void draw_button_cb(GtkWidget *drawing_area) {
   cairo_t *cr;
-  size_t pixels = global_data.pixels;
+  struct computation_context_t *ctx = global_data.comp_ctx;
+  size_t pixels = ctx->pixels;
+  bool is_sync = ctx->is_sync;
 
   /* Paint to the surface, where we store our state */
   cr = cairo_create(global_data.surface);
-  atomic_int *colors = global_data.set;
+  atomic_int *colors = ctx->set;
   draw_square(cr, colors, pixels);
 
   /* Actually redraw */
   gtk_widget_queue_draw_area(drawing_area, 0, 0, pixels, pixels);
 
   /* Freeing resources */
-  if (global_data.is_sync) {
+  if (is_sync) {
     free(colors);
-    global_data.set = NULL;
+    ctx->set = NULL;
   }
 }
 
-void calculate_button_cb(gpointer _data) {
-  (void) _data;
+void compute_button_cb(struct computation_context_t *ctx) {
   g_message("CALCULATE\n");
-  size_t pixels = global_data.pixels;
+
+  size_t pixels = ctx->pixels;
+  size_t num_threads = ctx->num_threads;
+  bool is_sync = ctx->is_sync;
+
   atomic_int *set = calloc(pixels * pixels, sizeof(atomic_int));
-  global_data.set = set;
-  fill_mandelbrot(set, pixels, global_data.is_sync, global_data.num_threads);
+  ctx->set = set;
+
+  fill_mandelbrot(set, pixels, is_sync, num_threads);
 }
 
 void sync_button_cb(GtkWidget *text_view) {
-  global_data.is_sync = true;
+  global_data.comp_ctx->is_sync = true;
   GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
   char *msg = info_text();
   gtk_text_buffer_set_text(buf, msg, -1);
@@ -45,7 +51,7 @@ void sync_button_cb(GtkWidget *text_view) {
 }
 
 void async_button_cb(GtkWidget *text_view) {
-  global_data.is_sync = false;
+  global_data.comp_ctx->is_sync = false;
   GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
   char *msg = info_text();
   gtk_text_buffer_set_text(buf, msg, -1);

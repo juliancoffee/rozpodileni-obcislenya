@@ -4,15 +4,22 @@
 extern struct GlobalData global_data;
 
 char *info_text(void) {
-  char *msg_buf = calloc(1000, sizeof(char));
+  struct computation_context_t *ctx = global_data.comp_ctx;
+  bool is_sync = ctx->is_sync;
+  size_t num_threads = ctx->num_threads;
+  size_t pixels = ctx->pixels;
+
+  size_t buflen = 1000;
+  char *msg_buf = calloc(buflen, sizeof(char));
+
   snprintf(msg_buf,
-           1000,
+           buflen,
            "Is synced: %s\n"
            "Number of threads: %zu\n"
            "%zu*%zu pixels image",
-           global_data.is_sync ? "true" : "false",
-           global_data.num_threads,
-           global_data.pixels,
-           global_data.pixels);
+           is_sync ? "true" : "false",
+           num_threads,
+           pixels,
+           pixels);
   return msg_buf;
 }
