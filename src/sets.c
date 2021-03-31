@@ -37,6 +37,7 @@ static void mandelbrot_fill_range(atomic_int *colors,
       *to_set = mandelbrot_cell(x, y, pixels);
     }
   }
+  g_debug("filled range [%zu, %zu)", ystart, yend);
 }
 
 static void *mandelbrot_fill_range_helper(void *arg) {
@@ -64,7 +65,10 @@ void fill_mandelbrot(atomic_int *colors,
   }
   if (is_sync) {
     for (size_t n = 0; n < num_threads; n++) {
-      pthread_join(thread_ids[n], NULL);
+      int res = pthread_join(thread_ids[n], NULL);
+      if (res != 0) {
+        g_warning("thread is finished with result: %d\n", res);
+      }
     }
   }
   free(thread_ids);

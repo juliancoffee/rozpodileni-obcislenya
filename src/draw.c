@@ -80,7 +80,7 @@ int draw_square(cairo_t *cr, atomic_int *colors, size_t size) {
     init_palette(&global_data.palette);
   }
   if (colors == NULL) {
-    g_message("Wait a minute, this is not democracy. This is anal sex.\n");
+    g_warning("colors == NULL, set isn't initalized\n");
     return -1;
   }
   for (size_t x = 0; x < size; x++) {

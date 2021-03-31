@@ -18,7 +18,7 @@ static void clear_surface(void) {
 static gboolean draw_cb(GtkWidget *_widget, cairo_t *cr, gpointer _data) {
   (void) _widget;
   (void) _data;
-  g_message("DRAW\n");
+  g_debug("DRAW\n");
   cairo_set_source_surface(cr, surface, 0, 0);
   cairo_paint(cr);
 
@@ -29,7 +29,7 @@ static gboolean
 configure_cb(GtkWidget *widget, GdkEventConfigure *_event, gpointer _data) {
   (void) _event;
   (void) _data;
-  g_message("CONFIGURE\n");
+  g_debug("CONFIGURE\n");
   if (surface != NULL) {
     cairo_surface_destroy(surface);
   }

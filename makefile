@@ -16,6 +16,9 @@ all: bin/main
 run: bin/main
 	env IMG_SIZE=$(IMG_SIZE) ./bin/main --class float_please
 
+try: bin/main
+	env IMG_SIZE=$(IMG_SIZE) G_MESSAGES_DEBUG=all ./bin/main --class float_please
+
 debug: bin/main-debug
 	env IMG_SIZE=$(IMG_SIZE) gdb bin/main-debug
 

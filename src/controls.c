@@ -30,7 +30,7 @@ void draw_button_cb(GtkWidget *drawing_area) {
 }
 
 void compute_button_cb(struct computation_context_t *ctx) {
-  g_message("CALCULATE\n");
+  g_debug("CALCULATE\n");
 
   size_t pixels = ctx->pixels;
   size_t num_threads = ctx->num_threads;
