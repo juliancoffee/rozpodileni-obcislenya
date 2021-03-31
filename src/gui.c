@@ -1,8 +1,7 @@
 #include "gui.h"
 #include "controls.h"
 #include "globals.h"
-#include "message.h"
-#include "util.h"
+#include "widgets.h"
 #include <gtk/gtk.h>
 
 static cairo_surface_t *surface = NULL;
@@ -46,63 +45,53 @@ static gboolean configure_cb(GtkWidget *widget, GdkEventConfigure *_event,
 }
 
 static void activate(GtkApplication *app) {
-  GtkWidget *window = gtk_application_window_new(app);
-  gtk_window_set_title(GTK_WINDOW(window), "Mandelbrot Set Draw");
+  /* Widget creation */
+  GtkWidget *window = my_window(app);
 
-  GtkWidget *global_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-  gtk_container_add(GTK_CONTAINER(window), global_box);
+  GtkWidget *global_box = my_box(GTK_ORIENTATION_HORIZONTAL);
 
-  GtkWidget *left_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
-  gtk_container_add(GTK_CONTAINER(global_box), left_box);
+  GtkWidget *left_box = my_box(GTK_ORIENTATION_VERTICAL);
+  GtkWidget *button_box = my_button_box(GTK_ORIENTATION_VERTICAL);
+  GtkWidget *text_view = my_text_view();
 
-  GtkWidget *button_box = gtk_button_box_new(GTK_ORIENTATION_VERTICAL);
-  gtk_button_box_set_layout((GtkButtonBox *)button_box, GTK_BUTTONBOX_SPREAD);
-  gtk_container_add(GTK_CONTAINER(left_box), button_box);
+  GtkWidget *draw_button = gtk_button_new_with_label("Draw");
+  GtkWidget *calculate_button = gtk_button_new_with_label("Calculate");
+  GtkWidget *sync_button = gtk_button_new_with_label("Sync");
+  GtkWidget *async_button = gtk_button_new_with_label("Async");
+  GtkWidget *exit_button = gtk_button_new_with_label("Exit");
 
-  GtkWidget *frame = gtk_frame_new(NULL);
-  gtk_widget_set_size_request(frame, global_data.pixels, global_data.pixels);
-  gtk_container_add(GTK_CONTAINER(global_box), frame);
-
+  GtkWidget *frame = my_frame(global_data.pixels);
   GtkWidget *drawing_area = gtk_drawing_area_new();
+
+  /* Add elements to containers */
+  gtk_container_add(GTK_CONTAINER(window), global_box);
+  gtk_container_add(GTK_CONTAINER(global_box), left_box);
+  gtk_container_add(GTK_CONTAINER(global_box), frame);
+  gtk_container_add(GTK_CONTAINER(frame), drawing_area);
+  gtk_container_add(GTK_CONTAINER(left_box), button_box);
+  gtk_container_add(GTK_CONTAINER(button_box), draw_button);
+  gtk_container_add(GTK_CONTAINER(button_box), calculate_button);
+  gtk_container_add(GTK_CONTAINER(button_box), sync_button);
+  gtk_container_add(GTK_CONTAINER(button_box), async_button);
+  gtk_container_add(GTK_CONTAINER(button_box), exit_button);
+  gtk_container_add(GTK_CONTAINER(left_box), text_view);
+
+  /* Add signal callbacks */
   g_signal_connect(drawing_area, "draw", G_CALLBACK(draw_cb), NULL);
   g_signal_connect(drawing_area, "configure-event", G_CALLBACK(configure_cb),
                    NULL);
-  gtk_container_add(GTK_CONTAINER(frame), drawing_area);
-
-  GtkWidget *draw_button = gtk_button_new_with_label("Draw");
   g_signal_connect_swapped(draw_button, "clicked", G_CALLBACK(draw_button_cb),
                            drawing_area);
-  gtk_container_add(GTK_CONTAINER(button_box), draw_button);
-
-  GtkWidget *calculate_button = gtk_button_new_with_label("Calculate");
   g_signal_connect(calculate_button, "clicked", G_CALLBACK(calculate_button_cb),
                    NULL);
-  gtk_container_add(GTK_CONTAINER(button_box), calculate_button);
-
-  GtkWidget *text_view = gtk_text_view_new();
-  GtkWidget *sync_button = gtk_button_new_with_label("Sync");
   g_signal_connect_swapped(sync_button, "clicked", G_CALLBACK(sync_button_cb),
                            text_view);
-  gtk_container_add(GTK_CONTAINER(button_box), sync_button);
-
-  GtkWidget *async_button = gtk_button_new_with_label("Async");
   g_signal_connect_swapped(async_button, "clicked", G_CALLBACK(async_button_cb),
                            text_view);
-  gtk_container_add(GTK_CONTAINER(button_box), async_button);
-
-  GtkWidget *exit_button = gtk_button_new_with_label("Exit");
   g_signal_connect_swapped(exit_button, "clicked",
                            G_CALLBACK(gtk_widget_destroy), window);
-  gtk_container_add(GTK_CONTAINER(button_box), exit_button);
-
-  GtkTextBuffer *buffer = gtk_text_view_get_buffer((GtkTextView *)text_view);
-
-  char *msg_buf = info_text();
-  gtk_text_buffer_set_text(buffer, msg_buf, -1);
-  gtk_container_add(GTK_CONTAINER(left_box), text_view);
 
   gtk_widget_show_all(window);
-  free(msg_buf);
 }
 
 int start_app(int argc, char **argv) {
