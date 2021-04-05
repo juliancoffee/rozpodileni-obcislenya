@@ -1,4 +1,4 @@
 #pragma once
 #include "globals.h"
 
-char *info_text(struct computation_context_t *ctx);
+void update_info(GtkWidget *text_view, struct computation_context_t *ctx);

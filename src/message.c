@@ -1,7 +1,7 @@
 #include "message.h"
 #include "globals.h"
 
-char *info_text(struct computation_context_t *ctx) {
+static char *info_text(struct computation_context_t *ctx) {
   bool is_sync = ctx->is_sync;
   size_t num_threads = ctx->num_threads;
   size_t pixels = ctx->pixels;
@@ -19,4 +19,11 @@ char *info_text(struct computation_context_t *ctx) {
            pixels,
            pixels);
   return msg_buf;
+}
+
+void update_info(GtkWidget *text_view, struct computation_context_t *ctx) {
+  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
+  char *msg = info_text(ctx);
+  gtk_text_buffer_set_text(buf, msg, -1);
+  free(msg);
 }

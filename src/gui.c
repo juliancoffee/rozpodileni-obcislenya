@@ -71,6 +71,8 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
   GtkWidget *sync_button = gtk_button_new_with_label("Sync");
   GtkWidget *async_button = gtk_button_new_with_label("Async");
   GtkWidget *exit_button = gtk_button_new_with_label("Exit");
+  GtkWidget *increase_threads_button = gtk_button_new_with_label("Inc");
+  GtkWidget *decrease_threads_button = gtk_button_new_with_label("Dec");
 
   GtkWidget *frame = my_frame(data->comp_ctx->pixels);
   GtkWidget *drawing_area = gtk_drawing_area_new();
@@ -85,6 +87,8 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
   gtk_container_add(GTK_CONTAINER(button_box), calculate_button);
   gtk_container_add(GTK_CONTAINER(button_box), sync_button);
   gtk_container_add(GTK_CONTAINER(button_box), async_button);
+  gtk_container_add(GTK_CONTAINER(button_box), increase_threads_button);
+  gtk_container_add(GTK_CONTAINER(button_box), decrease_threads_button);
   gtk_container_add(GTK_CONTAINER(button_box), exit_button);
   gtk_container_add(GTK_CONTAINER(left_box), text_view);
 
@@ -100,14 +104,19 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
 
   g_signal_connect_swapped(
       calculate_button, "clicked", G_CALLBACK(compute_button_cb), comp_ctx);
+
   g_signal_connect_swapped(sync_button,
                            "clicked",
                            G_CALLBACK(sync_button_cb),
                            bind(text_view, data));
+
   g_signal_connect_swapped(async_button,
                            "clicked",
                            G_CALLBACK(async_button_cb),
                            bind(text_view, data));
+
+  g_signal_connect_swapped(increase_threads_button, "clicked", G_CALLBACK(increase_threads_cb), bind(text_view, data));
+  g_signal_connect_swapped(decrease_threads_button, "clicked", G_CALLBACK(decrease_threads_cb), bind(text_view, data));
   g_signal_connect_swapped(
       exit_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
 

@@ -2,7 +2,6 @@
 #include "gui.h"
 #include "util.h"
 
-// TODO: increase and decrease number of threads
 // TODO: implement pausing
 // TODO: implement clearing of image
 int main(int argc, char **argv) {

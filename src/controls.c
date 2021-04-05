@@ -44,21 +44,43 @@ void compute_button_cb(struct computation_context_t *ctx) {
 }
 
 void sync_button_cb(struct binded_widget_t *bind) {
-  struct computation_context_t *ctx = bind->data->comp_ctx;
   GtkWidget *text_view = bind->widget;
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+
   ctx->is_sync = true;
-  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
-  char *msg = info_text(ctx);
-  gtk_text_buffer_set_text(buf, msg, -1);
-  free(msg);
+
+  update_info(text_view, ctx);
 }
 
 void async_button_cb(struct binded_widget_t *bind) {
-  struct computation_context_t *ctx = bind->data->comp_ctx;
   GtkWidget *text_view = bind->widget;
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+
   ctx->is_sync = false;
-  GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) text_view);
-  char *msg = info_text(ctx);
-  gtk_text_buffer_set_text(buf, msg, -1);
-  free(msg);
+
+  update_info(text_view, ctx);
+}
+
+void increase_threads_cb(struct binded_widget_t *bind) {
+  GtkWidget *text_view = bind->widget;
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+
+  size_t to_set = ctx->num_threads + 1;
+  ctx->num_threads = to_set;
+
+  update_info(text_view, ctx);
+}
+
+void decrease_threads_cb(struct binded_widget_t *bind) {
+  GtkWidget *text_view = bind->widget;
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+
+  size_t to_set = ctx->num_threads - 1;
+  if (to_set > 1) {
+    ctx->num_threads = to_set;
+  } else {
+    ctx->num_threads = 1;
+  }
+
+  update_info(text_view, ctx);
 }
