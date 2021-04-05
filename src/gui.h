@@ -1,4 +1,4 @@
 #pragma once
-#include "globals.h"
+#include "data.h"
 
 int start_app(int argc, char **argv, struct GlobalData *data);

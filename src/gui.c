@@ -1,6 +1,6 @@
 #include "gui.h"
 #include "controls.h"
-#include "globals.h"
+#include "data.h"
 #include "util.h"
 #include "widgets.h"
 #include <gtk/gtk.h>

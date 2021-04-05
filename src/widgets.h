@@ -1,4 +1,4 @@
-#include "globals.h"
+#include "data.h"
 #include <gtk/gtk.h>
 
 GtkWidget *my_window(GtkApplication *app);

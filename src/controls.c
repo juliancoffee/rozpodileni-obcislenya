@@ -1,6 +1,6 @@
 #include "controls.h"
 #include "draw.h"
-#include "globals.h"
+#include "data.h"
 #include "message.h"
 #include "sets.h"
 #include "util.h"

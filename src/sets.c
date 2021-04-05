@@ -1,5 +1,5 @@
 #include "sets.h"
-#include "globals.h"
+#include "data.h"
 #include "util.h"
 #include <complex.h>
 

@@ -1,5 +1,5 @@
 #include "message.h"
-#include "globals.h"
+#include "data.h"
 
 static char *info_text(struct computation_context_t *ctx) {
   bool is_sync = ctx->is_sync;

@@ -1,5 +1,5 @@
 #pragma once
-#include "globals.h"
+#include "data.h"
 #include <gtk/gtk.h>
 #include <stdatomic.h>
 

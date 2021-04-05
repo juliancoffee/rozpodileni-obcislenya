@@ -38,3 +38,4 @@ struct binded_widget_t {
   GtkWidget *widget;
   struct GlobalData *data;
 };
+
