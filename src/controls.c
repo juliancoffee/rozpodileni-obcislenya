@@ -3,7 +3,6 @@
 #include "data.h"
 #include "message.h"
 #include "sets.h"
-#include "util.h"
 #include <gtk/gtk.h>
 
 void draw_button_cb(struct binded_widget_t *bind) {

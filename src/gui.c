@@ -1,7 +1,7 @@
 #include "gui.h"
 #include "controls.h"
 #include "data.h"
-#include "util.h"
+#include "memmacros.h"
 #include "widgets.h"
 #include <gtk/gtk.h>
 
@@ -10,10 +10,11 @@ static cairo_surface_t *surface = NULL;
 // memory management: caller owns the data
 static struct binded_widget_t *bind(GtkWidget *widget,
                                     struct GlobalData *data) {
-  struct binded_widget_t *bundle = NEW(struct binded_widget_t);
-  bundle->widget = widget;
-  bundle->data = data;
-  return bundle;
+  struct binded_widget_t bundle = {
+      .widget = widget,
+      .data = data,
+  };
+  return BOXED(bundle);
 }
 
 static void clear_surface(void) {
@@ -115,8 +116,14 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
                            G_CALLBACK(async_button_cb),
                            bind(text_view, data));
 
-  g_signal_connect_swapped(increase_threads_button, "clicked", G_CALLBACK(increase_threads_cb), bind(text_view, data));
-  g_signal_connect_swapped(decrease_threads_button, "clicked", G_CALLBACK(decrease_threads_cb), bind(text_view, data));
+  g_signal_connect_swapped(increase_threads_button,
+                           "clicked",
+                           G_CALLBACK(increase_threads_cb),
+                           bind(text_view, data));
+  g_signal_connect_swapped(decrease_threads_button,
+                           "clicked",
+                           G_CALLBACK(decrease_threads_cb),
+                           bind(text_view, data));
   g_signal_connect_swapped(
       exit_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
 

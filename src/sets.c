@@ -1,14 +1,7 @@
 #include "sets.h"
-#include "data.h"
 #include "util.h"
+#include "data.h"
 #include <complex.h>
-
-struct PackedArgs {
-  atomic_int *colors;
-  size_t ystart;
-  size_t yend;
-  size_t pixels;
-};
 
 static double norm(complex double z) {
   double x = creal(z);
@@ -41,7 +34,7 @@ static void mandelbrot_fill_range(atomic_int *colors,
 }
 
 static void *mandelbrot_fill_range_helper(void *arg) {
-  struct PackedArgs *args = arg;
+  struct packed_args_t *args = arg;
   mandelbrot_fill_range(args->colors, args->ystart, args->yend, args->pixels);
   free(args);
   return NULL;
@@ -58,12 +51,14 @@ void fill_mandelbrot(atomic_int *colors,
     size_t start = n * pixels / num_threads;
     size_t end = (n + 1) * pixels / num_threads;
     // memory management: freed in callback function
-    struct PackedArgs *args = NEW(struct PackedArgs);
-    args->colors = colors;
-    args->ystart = start;
-    args->yend = end;
-    args->pixels = pixels;
-    pthread_create(&thread_ids[n], NULL, mandelbrot_fill_range_helper, args);
+    struct packed_args_t args = {
+        .colors = colors,
+        .ystart = start,
+        .yend = end,
+        .pixels = pixels,
+    };
+    pthread_create(
+        &thread_ids[n], NULL, mandelbrot_fill_range_helper, BOXED(args));
   }
   if (is_sync) {
     for (size_t n = 0; n < num_threads; n++) {

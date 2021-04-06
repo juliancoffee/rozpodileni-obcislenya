@@ -1,7 +1,7 @@
 #include "data.h"
 #include "gui.h"
-#include "util.h"
 #include "memmacros.h"
+
 
 // TODO: implement pausing
 // TODO: implement clearing of image

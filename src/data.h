@@ -1,4 +1,5 @@
 #pragma once
+#include "memmacros.h"
 #include <gtk/gtk.h>
 #include <stdatomic.h>
 #include <stdbool.h>
@@ -39,3 +40,22 @@ struct binded_widget_t {
   struct GlobalData *data;
 };
 
+struct packed_args_t {
+  atomic_int *colors;
+  size_t ystart;
+  size_t yend;
+  size_t pixels;
+};
+
+// template instantiation
+CREATE_BOXING_FOR(struct drawing_context_t, boxed_draw);
+CREATE_BOXING_FOR(struct computation_context_t, boxed_comp);
+CREATE_BOXING_FOR(struct packed_args_t, boxed_args);
+CREATE_BOXING_FOR(struct binded_widget_t, boxed_bind);
+
+#define BOXED(value)                                                           \
+  DISPATCH(value,                                                              \
+           MATCH(struct drawing_context_t, boxed_draw),                        \
+           MATCH(struct computation_context_t, boxed_comp),                    \
+           MATCH(struct binded_widget_t, boxed_bind),                          \
+           MATCH(struct packed_args_t, boxed_args))
