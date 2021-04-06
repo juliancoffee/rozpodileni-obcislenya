@@ -2,7 +2,6 @@
 #include "gui.h"
 #include "memmacros.h"
 
-// TODO: implement pausing
 // TODO: implement clearing of image
 int main(int argc, char **argv) {
   char *img_size_request = getenv("IMG_SIZE");
