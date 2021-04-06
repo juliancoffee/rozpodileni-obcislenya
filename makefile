@@ -1,4 +1,4 @@
-.PHONY: clean run debug all
+.PHONY: all run try debug check clean
 
 CC=gcc
 CFLAGS=-std=c11 -Wall -Werror -Wextra -pedantic
@@ -28,6 +28,9 @@ bin/main: $(FILES) $(HEADERS)
 
 bin/main-debug: $(FILES) $(HEADERS)
 	$(CC) $(INCLUDE) $(LIBS) $(DEBUG_FLAGS) $(FILES) -o bin/main-debug
+
+check:
+	./check.sh
 
 clean:
 	rm -rf bin/main bin/main-debug
