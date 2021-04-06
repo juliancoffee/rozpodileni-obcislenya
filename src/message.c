@@ -9,15 +9,16 @@ static char *info_text(struct computation_context_t *ctx) {
   size_t buflen = 1000;
   char *msg_buf = calloc(buflen, sizeof(char));
 
-  snprintf(msg_buf,
-           buflen,
-           "Is synced: %s\n"
-           "Number of threads: %zu\n"
-           "%zu*%zu pixels image",
-           is_sync ? "true" : "false",
-           num_threads,
-           pixels,
-           pixels);
+  snprintf(
+      msg_buf,
+      buflen,
+      "Is synced: %s\n"
+      "Number of threads: %zu\n"
+      "%zu*%zu pixels image",
+      is_sync ? "true" : "false",
+      num_threads,
+      pixels,
+      pixels);
   return msg_buf;
 }
 

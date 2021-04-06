@@ -1,6 +1,6 @@
 #include "controls.h"
-#include "draw.h"
 #include "data.h"
+#include "draw.h"
 #include "message.h"
 #include "sets.h"
 #include <gtk/gtk.h>

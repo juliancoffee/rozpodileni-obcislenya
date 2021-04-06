@@ -15,7 +15,6 @@
   }                                                                            \
   FORCE_SEMICOLON()
 
-
 #define MATCH(T, target)                                                       \
   T:                                                                           \
   target

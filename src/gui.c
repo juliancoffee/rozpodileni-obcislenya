@@ -8,8 +8,8 @@
 static cairo_surface_t *surface = NULL;
 
 // memory management: caller owns the data
-static struct binded_widget_t *bind(GtkWidget *widget,
-                                    struct GlobalData *data) {
+static struct binded_widget_t *
+bind(GtkWidget *widget, struct GlobalData *data) {
   struct binded_widget_t bundle = {
       .widget = widget,
       .data = data,
@@ -34,9 +34,10 @@ static gboolean draw_cb(GtkWidget *_widget, cairo_t *cr, gpointer _data) {
   return FALSE;
 }
 
-static gboolean configure_cb(GtkWidget *widget,
-                             GdkEventConfigure *_event,
-                             struct drawing_context_t *ctx) {
+static gboolean configure_cb(
+    GtkWidget *widget,
+    GdkEventConfigure *_event,
+    struct drawing_context_t *ctx) {
   (void) _event;
   if (surface != NULL) {
     cairo_surface_destroy(surface);
@@ -98,32 +99,37 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
   g_signal_connect(
       drawing_area, "configure-event", G_CALLBACK(configure_cb), draw_ctx);
 
-  g_signal_connect_swapped(draw_button,
-                           "clicked",
-                           G_CALLBACK(draw_button_cb),
-                           bind(drawing_area, data));
+  g_signal_connect_swapped(
+      draw_button,
+      "clicked",
+      G_CALLBACK(draw_button_cb),
+      bind(drawing_area, data));
 
   g_signal_connect_swapped(
       calculate_button, "clicked", G_CALLBACK(compute_button_cb), comp_ctx);
 
-  g_signal_connect_swapped(sync_button,
-                           "clicked",
-                           G_CALLBACK(sync_button_cb),
-                           bind(text_view, data));
+  g_signal_connect_swapped(
+      sync_button,
+      "clicked",
+      G_CALLBACK(sync_button_cb),
+      bind(text_view, data));
 
-  g_signal_connect_swapped(async_button,
-                           "clicked",
-                           G_CALLBACK(async_button_cb),
-                           bind(text_view, data));
+  g_signal_connect_swapped(
+      async_button,
+      "clicked",
+      G_CALLBACK(async_button_cb),
+      bind(text_view, data));
 
-  g_signal_connect_swapped(increase_threads_button,
-                           "clicked",
-                           G_CALLBACK(increase_threads_cb),
-                           bind(text_view, data));
-  g_signal_connect_swapped(decrease_threads_button,
-                           "clicked",
-                           G_CALLBACK(decrease_threads_cb),
-                           bind(text_view, data));
+  g_signal_connect_swapped(
+      increase_threads_button,
+      "clicked",
+      G_CALLBACK(increase_threads_cb),
+      bind(text_view, data));
+  g_signal_connect_swapped(
+      decrease_threads_button,
+      "clicked",
+      G_CALLBACK(decrease_threads_cb),
+      bind(text_view, data));
   g_signal_connect_swapped(
       exit_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);
 
@@ -131,8 +137,8 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
 }
 
 int start_app(int argc, char **argv, struct GlobalData *data) {
-  GtkApplication *app = gtk_application_new("org.example.mandelbrot-draw",
-                                            G_APPLICATION_FLAGS_NONE);
+  GtkApplication *app = gtk_application_new(
+      "org.example.mandelbrot-draw", G_APPLICATION_FLAGS_NONE);
 
   g_signal_connect(app, "activate", G_CALLBACK(activate), data);
   int status = g_application_run(G_APPLICATION(app), argc, argv);

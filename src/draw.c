@@ -57,19 +57,21 @@ static void init_palette(struct palette_t *palette) {
   struct rgb_tuple_t *data = palette->data;
   for (size_t color = 0; color < num_colors; color++) {
     float colorf = (float) color;
-    set_rgb(colorf / num_colors,
-            &data[color].red,
-            &data[color].green,
-            &data[color].blue);
+    set_rgb(
+        colorf / num_colors,
+        &data[color].red,
+        &data[color].green,
+        &data[color].blue);
   }
 }
 
 // input: int color from 0 to NUM_COLORS
-static void set_colors_from(size_t color,
-                            double *red,
-                            double *green,
-                            double *blue,
-                            struct palette_t palette) {
+static void set_colors_from(
+    size_t color,
+    double *red,
+    double *green,
+    double *blue,
+    struct palette_t palette) {
   assert(color < palette.len);
   struct rgb_tuple_t *data = palette.data;
   *red = data[color - 1].red;
@@ -77,10 +79,8 @@ static void set_colors_from(size_t color,
   *blue = data[color - 1].blue;
 }
 
-int draw_square(cairo_t *cr,
-                atomic_int *colors,
-                size_t size,
-                struct palette_t palette) {
+int draw_square(
+    cairo_t *cr, atomic_int *colors, size_t size, struct palette_t palette) {
   if (palette.data == NULL) {
     init_palette(&palette);
   }

@@ -54,8 +54,9 @@ CREATE_BOXING_FOR(struct packed_args_t, boxed_args);
 CREATE_BOXING_FOR(struct binded_widget_t, boxed_bind);
 
 #define BOXED(value)                                                           \
-  DISPATCH(value,                                                              \
-           MATCH(struct drawing_context_t, boxed_draw),                        \
-           MATCH(struct computation_context_t, boxed_comp),                    \
-           MATCH(struct binded_widget_t, boxed_bind),                          \
-           MATCH(struct packed_args_t, boxed_args))
+  DISPATCH(                                                                    \
+      value,                                                                   \
+      MATCH(struct drawing_context_t, boxed_draw),                             \
+      MATCH(struct computation_context_t, boxed_comp),                         \
+      MATCH(struct binded_widget_t, boxed_bind),                               \
+      MATCH(struct packed_args_t, boxed_args))
