@@ -12,7 +12,16 @@ void draw_button_cb(struct binded_widget_t *bind) {
   struct drawing_context_t *draw_ctx = bind->data->draw_ctx;
   GtkWidget *drawing_area = bind->widget;
   size_t pixels = ctx->pixels;
+  size_t num_threads = ctx->num_threads;
   bool is_sync = ctx->is_sync;
+
+  // Waiting for computation to finish if synced
+  if (is_sync) {
+  //FIXME: there will be deadlock if we paused
+    for (size_t n = 0; n < num_threads; n++) {
+      pthread_join(ctx->workers[n], NULL);
+    }
+  }
 
   /* Paint to the surface, where we store our state */
   cr = cairo_create(draw_ctx->surface);
@@ -21,12 +30,6 @@ void draw_button_cb(struct binded_widget_t *bind) {
 
   /* Actually redraw */
   gtk_widget_queue_draw_area(drawing_area, 0, 0, pixels, pixels);
-
-  /* Freeing resources */
-  if (is_sync) {
-    free(colors);
-    ctx->set = NULL;
-  }
 }
 
 void compute_button_cb(struct computation_context_t *ctx) {
@@ -34,12 +37,19 @@ void compute_button_cb(struct computation_context_t *ctx) {
 
   size_t pixels = ctx->pixels;
   size_t num_threads = ctx->num_threads;
-  bool is_sync = ctx->is_sync;
 
   atomic_int *set = calloc(pixels * pixels, sizeof(atomic_int));
   ctx->set = set;
 
-  fill_mandelbrot(set, pixels, is_sync, num_threads);
+  fill_mandelbrot(set, pixels, ctx->is_paused, ctx->workers, num_threads);
+}
+
+void toggle_pause_button_cb(struct binded_widget_t *bind) {
+  GtkWidget *text_view = bind->widget;
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+
+  *ctx->is_paused = !(*ctx->is_paused);
+  update_info(text_view, ctx);
 }
 
 void sync_button_cb(struct binded_widget_t *bind) {

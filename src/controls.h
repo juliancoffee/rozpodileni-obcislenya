@@ -7,3 +7,4 @@ void sync_button_cb(struct binded_widget_t *bind);
 void async_button_cb(struct binded_widget_t *bind);
 void increase_threads_cb(struct binded_widget_t *bind);
 void decrease_threads_cb(struct binded_widget_t *bind);
+void toggle_pause_button_cb(struct binded_widget_t *bind);

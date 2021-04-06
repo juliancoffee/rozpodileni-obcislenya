@@ -22,6 +22,8 @@ struct computation_context_t {
   size_t pixels;
   atomic_int *set;
   bool is_sync;
+  pthread_t *workers;
+  atomic_bool *is_paused;
   size_t num_threads;
 };
 
@@ -42,6 +44,7 @@ struct binded_widget_t {
 
 struct packed_args_t {
   atomic_int *colors;
+  atomic_bool *is_paused;
   size_t ystart;
   size_t yend;
   size_t pixels;
@@ -52,6 +55,7 @@ DECLARE_BOXING_FOR(struct drawing_context_t, boxed_draw);
 DECLARE_BOXING_FOR(struct computation_context_t, boxed_comp);
 DECLARE_BOXING_FOR(struct packed_args_t, boxed_args);
 DECLARE_BOXING_FOR(struct binded_widget_t, boxed_bind);
+DECLARE_BOXING_FOR(atomic_bool, boxed_atomic_bool);
 
 #define BOXED(value)                                                           \
   DISPATCH(                                                                    \
@@ -59,4 +63,5 @@ DECLARE_BOXING_FOR(struct binded_widget_t, boxed_bind);
       MATCH(struct drawing_context_t, boxed_draw),                             \
       MATCH(struct computation_context_t, boxed_comp),                         \
       MATCH(struct binded_widget_t, boxed_bind),                               \
+      MATCH(bool, boxed_atomic_bool),                                          \
       MATCH(struct packed_args_t, boxed_args))
