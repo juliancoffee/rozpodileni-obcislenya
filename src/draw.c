@@ -79,6 +79,8 @@ static void set_colors_from(
   *blue = data[color - 1].blue;
 }
 
+/* Draw pixels from `colors` of `size` X `size` onto surface from `cr` context
+ */
 int draw_square(
     cairo_t *cr, atomic_int *colors, size_t size, struct palette_t palette) {
   if (palette.data == NULL) {

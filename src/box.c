@@ -1,5 +1,5 @@
-#include "memmacros.h"
 #include "data.h"
+#include "memmacros.h"
 
 // template instantiation
 CREATE_BOXING_FOR(struct drawing_context_t, boxed_draw);

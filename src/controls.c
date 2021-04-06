@@ -17,7 +17,7 @@ void draw_button_cb(struct binded_widget_t *bind) {
 
   // Waiting for computation to finish if synced
   if (is_sync) {
-  //FIXME: there will be deadlock if we paused
+    // FIXME: there will be deadlock if we paused
     for (size_t n = 0; n < num_threads; n++) {
       pthread_join(ctx->workers[n], NULL);
     }

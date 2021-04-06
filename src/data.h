@@ -57,6 +57,8 @@ DECLARE_BOXING_FOR(struct packed_args_t, boxed_args);
 DECLARE_BOXING_FOR(struct binded_widget_t, boxed_bind);
 DECLARE_BOXING_FOR(atomic_bool, boxed_atomic_bool);
 
+/* initialize value on the heap and return pointer to that value
+ */
 #define BOXED(value)                                                           \
   DISPATCH(                                                                    \
       value,                                                                   \
