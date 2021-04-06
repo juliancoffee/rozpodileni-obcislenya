@@ -47,11 +47,11 @@ struct packed_args_t {
   size_t pixels;
 };
 
-// template instantiation
-CREATE_BOXING_FOR(struct drawing_context_t, boxed_draw);
-CREATE_BOXING_FOR(struct computation_context_t, boxed_comp);
-CREATE_BOXING_FOR(struct packed_args_t, boxed_args);
-CREATE_BOXING_FOR(struct binded_widget_t, boxed_bind);
+// template delcaration
+DECLARE_BOXING_FOR(struct drawing_context_t, boxed_draw);
+DECLARE_BOXING_FOR(struct computation_context_t, boxed_comp);
+DECLARE_BOXING_FOR(struct packed_args_t, boxed_args);
+DECLARE_BOXING_FOR(struct binded_widget_t, boxed_bind);
 
 #define BOXED(value)                                                           \
   DISPATCH(                                                                    \
