@@ -3,6 +3,7 @@
 #include "memmacros.h"
 
 #define DEFAULT_THREADS 4
+// TODO: threads priority
 // TODO: implement clearing of image
 int main(int argc, char **argv) {
   /* set image size */
