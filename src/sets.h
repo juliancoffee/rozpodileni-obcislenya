@@ -1,4 +1,5 @@
 #pragma once
+#include "data.h"
 #include <pthread.h>
 #include <stdatomic.h>
 #include <stdbool.h>
@@ -8,5 +9,5 @@ void fill_mandelbrot(
     atomic_int *colors,
     size_t pixels,
     atomic_bool *is_paused,
-    pthread_t *workers,
-    size_t num_threads);
+    struct worker_t *workers,
+    int16_t num_threads);

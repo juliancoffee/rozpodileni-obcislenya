@@ -2,8 +2,10 @@
 #include "gui.h"
 #include "memmacros.h"
 
+#define DEFAULT_THREADS 4
 // TODO: implement clearing of image
 int main(int argc, char **argv) {
+  /* set image size */
   char *img_size_request = getenv("IMG_SIZE");
   size_t pixels;
   if (img_size_request != NULL) {
@@ -12,13 +14,19 @@ int main(int argc, char **argv) {
     pixels = 500;
   }
 
+  /* Initialize workers */
+  struct worker_t *workers = malloc(DEFAULT_THREADS * sizeof(struct worker_t));
+  for (size_t n = 0; n < DEFAULT_THREADS; n++) {
+    workers[n].is_init = false;
+  }
+
   struct computation_context_t comp_ctx = {
-      .is_sync = true,
-      .num_threads = 4,
-      .workers = calloc(4, sizeof(pthread_t)),
       .pixels = pixels,
-      .is_paused = BOXED((bool) false),
       .set = NULL,
+      .is_sync = true,
+      .is_paused = BOXED((bool) false),
+      .num_threads = DEFAULT_THREADS,
+      .workers = workers, 
   };
 
   struct drawing_context_t draw_ctx = {
@@ -31,7 +39,7 @@ int main(int argc, char **argv) {
       .draw_ctx = BOXED(draw_ctx),
   };
 
-  int status = start_app(argc, argv, &global_data);
+  int status = start_gui(argc, argv, &global_data);
   free(global_data.draw_ctx->palette.data);
   free(global_data.comp_ctx->workers);
   free(global_data.comp_ctx);

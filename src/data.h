@@ -18,13 +18,21 @@ struct palette_t {
   size_t len;
 };
 
+struct worker_t {
+  pthread_t thread;
+  bool is_init;
+};
+
 struct computation_context_t {
+  /* set to compute */
   size_t pixels;
   atomic_int *set;
+  /* flags for control flow */
   bool is_sync;
-  pthread_t *workers;
   atomic_bool *is_paused;
-  size_t num_threads;
+  /* mutlithreading staff */
+  struct worker_t *workers;
+  int16_t num_threads;
 };
 
 struct drawing_context_t {
@@ -42,6 +50,12 @@ struct binded_widget_t {
   struct GlobalData *data;
 };
 
+struct binded_widget_pair_t {
+  GtkWidget *first;
+  GtkWidget *second;
+  struct GlobalData *data;
+};
+
 struct packed_args_t {
   atomic_int *colors;
   atomic_bool *is_paused;
@@ -55,6 +69,7 @@ DECLARE_BOXING_FOR(struct drawing_context_t, boxed_draw);
 DECLARE_BOXING_FOR(struct computation_context_t, boxed_comp);
 DECLARE_BOXING_FOR(struct packed_args_t, boxed_args);
 DECLARE_BOXING_FOR(struct binded_widget_t, boxed_bind);
+DECLARE_BOXING_FOR(struct binded_widget_pair_t, boxed_pair_bind);
 DECLARE_BOXING_FOR(atomic_bool, boxed_atomic_bool);
 
 /* initialize value on the heap and return pointer to that value
@@ -65,5 +80,6 @@ DECLARE_BOXING_FOR(atomic_bool, boxed_atomic_bool);
       MATCH(struct drawing_context_t, boxed_draw),                             \
       MATCH(struct computation_context_t, boxed_comp),                         \
       MATCH(struct binded_widget_t, boxed_bind),                               \
+      MATCH(struct binded_widget_pair_t, boxed_pair_bind),                     \
       MATCH(bool, boxed_atomic_bool),                                          \
       MATCH(struct packed_args_t, boxed_args))

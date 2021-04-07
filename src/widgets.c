@@ -26,6 +26,8 @@ GtkWidget *my_frame(size_t pixels) {
 
 GtkWidget *my_text_view(struct computation_context_t *ctx) {
   GtkWidget *text_view = gtk_text_view_new();
-  update_info(text_view, ctx);
+  if (ctx != NULL) {
+    update_info(text_view, ctx);
+  }
   return text_view;
 }
