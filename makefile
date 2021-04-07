@@ -1,7 +1,7 @@
 .PHONY: all run try debug check clean
 
 CC=gcc
-CFLAGS=-std=c11 -Wall -Werror -Wextra -pedantic
+CFLAGS=-std=c11 -Wall -Wextra -pedantic -Werror
 OPT_FLAGS=$(CFLAGS) -O2
 DEBUG_FLAGS=$(CFLAGS) -g
 IMG_SIZE=500

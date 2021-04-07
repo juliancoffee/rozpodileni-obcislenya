@@ -52,7 +52,9 @@ static void set_rgb(double ratio, double *red, double *green, double *blue) {
 
 static void init_palette(struct palette_t *palette) {
   const size_t num_colors = NUM_COLORS;
-  palette->data = calloc(num_colors, sizeof(struct rgb_tuple_t));
+  struct rgb_tuple_t *palette_data = calloc_or_die(
+      num_colors, sizeof(struct rgb_tuple_t), "allocating palette data");
+  palette->data = palette_data;
   palette->len = num_colors;
   struct rgb_tuple_t *data = palette->data;
   for (size_t color = 0; color < num_colors; color++) {

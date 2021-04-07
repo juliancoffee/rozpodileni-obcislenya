@@ -46,7 +46,8 @@ void compute_button_cb(struct computation_context_t *ctx) {
   size_t pixels = ctx->pixels;
   int16_t num_threads = ctx->num_threads;
 
-  atomic_int *set = calloc(pixels * pixels, sizeof(atomic_int));
+  atomic_int *set =
+      calloc_or_die(pixels * pixels, sizeof(atomic_int), "allocating set");
   ctx->set = set;
 
   fill_mandelbrot(set, pixels, ctx->is_paused, ctx->workers, num_threads);
@@ -88,7 +89,9 @@ void update_workers(
   ctx->num_threads = to_set;
 
   /* realloc workers */
-  ctx->workers = realloc(ctx->workers, to_set * sizeof(struct worker_t));
+  struct worker_t *new_workers = realloc_or_die(
+      ctx->workers, to_set * sizeof(struct worker_t), "reallocating workers");
+  ctx->workers = new_workers;
 
   /* partly initalize new workers */
   for (int16_t n = old_num; n < to_set; n++) {

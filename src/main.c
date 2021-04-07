@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
   }
 
   /* Initialize workers */
-  struct worker_t *workers = malloc(DEFAULT_THREADS * sizeof(struct worker_t));
+  struct worker_t *workers = malloc_or_die(
+      DEFAULT_THREADS * sizeof(struct worker_t), "allocating workers");
   for (size_t n = 0; n < DEFAULT_THREADS; n++) {
     workers[n].is_init = false;
   }
@@ -26,7 +27,7 @@ int main(int argc, char **argv) {
       .is_sync = true,
       .is_paused = BOXED((bool) false),
       .num_threads = DEFAULT_THREADS,
-      .workers = workers, 
+      .workers = workers,
   };
 
   struct drawing_context_t draw_ctx = {

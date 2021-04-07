@@ -14,7 +14,7 @@ static char *info_text(struct computation_context_t *ctx) {
   atomic_bool is_paused = *ctx->is_paused;
 
   size_t buflen = 1000;
-  char *msg_buf = calloc(buflen, sizeof(char));
+  char *msg_buf = calloc_or_die(buflen, sizeof(char), "allocating buffer for message");
 
   snprintf(
       msg_buf,
@@ -41,7 +41,7 @@ void update_info(GtkWidget *text_view, struct computation_context_t *ctx) {
 void show_error(GtkWidget *error_view, char *error_msg) {
   GtkTextBuffer *buf = gtk_text_view_get_buffer((GtkTextView *) error_view);
   size_t buflen = 1000;
-  char *msg_buf = calloc(buflen, sizeof(char));
+  char *msg_buf = calloc_or_die(buflen, sizeof(char), "allocating buffer for message");
   char *time = current_time();
   snprintf(
       msg_buf,
