@@ -37,7 +37,7 @@ void draw_button_cb(struct binded_widget_pair_t *bind) {
   draw_square(cr, colors, pixels, draw_ctx->palette);
 
   /* Actually redraw */
-  gtk_widget_queue_draw_area(drawing_area, 0, 0, pixels, pixels);
+  gtk_widget_queue_draw_area(drawing_area, 0, 0, (gint) pixels, (gint) pixels);
 }
 
 void compute_button_cb(struct computation_context_t *ctx) {

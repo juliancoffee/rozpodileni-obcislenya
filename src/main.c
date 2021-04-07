@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
   char *img_size_request = getenv("IMG_SIZE");
   size_t pixels;
   if (img_size_request != NULL) {
-    pixels = atoi(img_size_request);
+    pixels = (size_t) abs(atoi(img_size_request));
   } else {
     pixels = 500;
   }

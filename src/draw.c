@@ -98,9 +98,9 @@ int draw_square(
       double green = 0;
       double blue = 0;
       atomic_int *color = element_at(colors, x, y, size);
-      set_colors_from(*color, &red, &green, &blue, palette);
+      set_colors_from((size_t) *color, &red, &green, &blue, palette);
       cairo_set_source_rgb(cr, red, green, blue);
-      cairo_rectangle(cr, x, y, 1, 1);
+      cairo_rectangle(cr, (double) x, (double) y, 1, 1);
       cairo_fill(cr);
     }
   }

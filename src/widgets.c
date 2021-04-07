@@ -20,7 +20,7 @@ GtkWidget *my_button_box(GtkOrientation orientation) {
 
 GtkWidget *my_frame(size_t pixels) {
   GtkWidget *frame = gtk_frame_new(NULL);
-  gtk_widget_set_size_request(frame, pixels, pixels);
+  gtk_widget_set_size_request(frame, (gint) pixels, (gint) pixels);
   return frame;
 }
 

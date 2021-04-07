@@ -32,7 +32,7 @@ static void mandelbrot_fill_range(
         // pause, do nothing
       }
       atomic_int *to_set = element_at(colors, x, y, pixels);
-      *to_set = mandelbrot_cell(x, y, pixels);
+      *to_set = mandelbrot_cell((double) x, (double) y, (double) pixels);
     }
   }
   g_debug("filled range [%zu, %zu)", ystart, yend);
