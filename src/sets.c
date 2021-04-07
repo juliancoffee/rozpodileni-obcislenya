@@ -51,9 +51,9 @@ void fill_mandelbrot(
     size_t pixels,
     atomic_bool *is_paused,
     struct worker_t *workers,
-    int16_t num_threads) {
+    uint16_t num_threads) {
 
-  for (int16_t n = 0; n < num_threads; n++) {
+  for (uint16_t n = 0; n < num_threads; n++) {
     size_t start = n * pixels / num_threads;
     size_t end = (n + 1) * pixels / num_threads;
     // memory management: freed in callback function

@@ -10,4 +10,4 @@ void fill_mandelbrot(
     size_t pixels,
     atomic_bool *is_paused,
     struct worker_t *workers,
-    int16_t num_threads);
+    uint16_t num_threads);

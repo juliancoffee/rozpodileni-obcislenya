@@ -32,7 +32,7 @@ struct computation_context_t {
   atomic_bool *is_paused;
   /* mutlithreading staff */
   struct worker_t *workers;
-  int16_t num_threads;
+  uint16_t num_threads;
 };
 
 struct drawing_context_t {

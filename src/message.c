@@ -9,7 +9,7 @@ static char *current_time(void) {
 
 static char *info_text(struct computation_context_t *ctx) {
   bool is_sync = ctx->is_sync;
-  int16_t num_threads = ctx->num_threads;
+  uint16_t num_threads = ctx->num_threads;
   size_t pixels = ctx->pixels;
   atomic_bool is_paused = *ctx->is_paused;
 

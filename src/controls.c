@@ -13,7 +13,7 @@ void draw_button_cb(struct binded_widget_pair_t *bind) {
   GtkWidget *drawing_area = bind->first;
   GtkWidget *error_view = bind->second;
   size_t pixels = ctx->pixels;
-  int16_t num_threads = ctx->num_threads;
+  uint16_t num_threads = ctx->num_threads;
   bool is_sync = ctx->is_sync;
   bool is_paused = *ctx->is_paused;
 
@@ -24,7 +24,7 @@ void draw_button_cb(struct binded_widget_pair_t *bind) {
       show_error(error_view, "Threads are pausing so we'll be waiting forever");
       return;
     }
-    for (int16_t n = 0; n < num_threads; n++) {
+    for (uint16_t n = 0; n < num_threads; n++) {
       if (ctx->workers[n].is_init == true) {
         pthread_join(ctx->workers[n].thread, NULL);
       }
@@ -44,7 +44,7 @@ void compute_button_cb(struct computation_context_t *ctx) {
   g_debug("CALCULATE\n");
 
   size_t pixels = ctx->pixels;
-  int16_t num_threads = ctx->num_threads;
+  uint16_t num_threads = ctx->num_threads;
 
   atomic_int *set =
       calloc_or_die(pixels * pixels, sizeof(atomic_int), "allocating set");
@@ -80,12 +80,26 @@ void async_button_cb(struct binded_widget_t *bind) {
 }
 
 void update_workers(
-    struct computation_context_t *ctx, int8_t diff, GtkWidget *text_view) {
+    struct computation_context_t *ctx, bool increase, GtkWidget *text_view) {
 
-  int16_t old_num = ctx->num_threads;
+  uint16_t old_num = ctx->num_threads;
   /* update number of threads */
-  int16_t to_set =
-      MAX(1, old_num + diff); // FIXME: there may be integer overflow
+  uint16_t to_set;
+  if (increase) {
+    if (old_num == UINT16_MAX) {
+      // it's time to stop increasing
+      return;
+    } else {
+      to_set = old_num + 1;
+    }
+  } else {
+    if (old_num == 1) {
+      // it's time to stop decreasing
+      return;
+    } else {
+      to_set = old_num - 1;
+    }
+  }
   ctx->num_threads = to_set;
 
   /* realloc workers */
@@ -94,7 +108,7 @@ void update_workers(
   ctx->workers = new_workers;
 
   /* partly initalize new workers */
-  for (int16_t n = old_num; n < to_set; n++) {
+  for (uint16_t n = old_num; n < to_set; n++) {
     ctx->workers[n].is_init = false;
   }
 
@@ -105,12 +119,12 @@ void increase_threads_cb(struct binded_widget_t *bind) {
   GtkWidget *text_view = bind->widget;
   struct computation_context_t *ctx = bind->data->comp_ctx;
 
-  update_workers(ctx, 1, text_view);
+  update_workers(ctx, true, text_view);
 }
 
 void decrease_threads_cb(struct binded_widget_t *bind) {
   GtkWidget *text_view = bind->widget;
   struct computation_context_t *ctx = bind->data->comp_ctx;
 
-  update_workers(ctx, -1, text_view);
+  update_workers(ctx, false, text_view);
 }
