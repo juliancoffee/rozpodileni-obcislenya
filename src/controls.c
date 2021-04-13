@@ -50,7 +50,13 @@ void compute_button_cb(struct computation_context_t *ctx) {
       calloc_or_die(pixels * pixels, sizeof(atomic_int), "allocating set");
   ctx->set = set;
 
-  fill_mandelbrot(set, pixels, ctx->is_paused, ctx->workers, num_threads);
+  fill_mandelbrot(
+      set,
+      pixels,
+      ctx->different_priority,
+      ctx->is_paused,
+      ctx->workers,
+      num_threads);
 }
 
 void toggle_pause_button_cb(struct binded_widget_t *bind) {
@@ -67,6 +73,16 @@ void toggle_sync_button_cb(struct binded_widget_t *bind) {
 
   bool old_val = ctx->is_sync;
   ctx->is_sync = !old_val;
+
+  update_info(text_view, ctx);
+}
+
+void toggle_priority_button_cb(struct binded_widget_t *bind) {
+  GtkWidget *text_view = bind->widget;
+  struct computation_context_t *ctx = bind->data->comp_ctx;
+
+  bool old_val = ctx->different_priority;
+  ctx->different_priority = !old_val;
 
   update_info(text_view, ctx);
 }

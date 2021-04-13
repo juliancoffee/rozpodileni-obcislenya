@@ -82,9 +82,11 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
   GtkWidget *draw_button = gtk_button_new_with_label("Draw");
   GtkWidget *calculate_button = gtk_button_new_with_label("Calculate");
   GtkWidget *sync_button = gtk_button_new_with_label("Toggle Sync");
+  GtkWidget *toggle_pause_button = gtk_button_new_with_label("Toggle Pause");
+  GtkWidget *toggle_priority_button =
+      gtk_button_new_with_label("Toggle Priority");
   GtkWidget *increase_threads_button = gtk_button_new_with_label("Inc");
   GtkWidget *decrease_threads_button = gtk_button_new_with_label("Dec");
-  GtkWidget *toggle_pause_button = gtk_button_new_with_label("Toggle Pause");
   GtkWidget *exit_button = gtk_button_new_with_label("Exit");
 
   GtkWidget *frame = my_frame(data->comp_ctx->pixels);
@@ -98,8 +100,9 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
   gtk_container_add(GTK_CONTAINER(left_box), button_box);
   gtk_container_add(GTK_CONTAINER(button_box), draw_button);
   gtk_container_add(GTK_CONTAINER(button_box), calculate_button);
-  gtk_container_add(GTK_CONTAINER(button_box), toggle_pause_button);
   gtk_container_add(GTK_CONTAINER(button_box), sync_button);
+  gtk_container_add(GTK_CONTAINER(button_box), toggle_pause_button);
+  gtk_container_add(GTK_CONTAINER(button_box), toggle_priority_button);
   gtk_container_add(GTK_CONTAINER(button_box), increase_threads_button);
   gtk_container_add(GTK_CONTAINER(button_box), decrease_threads_button);
   gtk_container_add(GTK_CONTAINER(button_box), exit_button);
@@ -127,6 +130,18 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
       bind(text_view, data));
 
   g_signal_connect_swapped(
+      toggle_pause_button,
+      "clicked",
+      G_CALLBACK(toggle_pause_button_cb),
+      bind(text_view, data));
+
+  g_signal_connect_swapped(
+      toggle_priority_button,
+      "clicked",
+      G_CALLBACK(toggle_priority_button_cb),
+      bind(text_view, data));
+
+  g_signal_connect_swapped(
       increase_threads_button,
       "clicked",
       G_CALLBACK(increase_threads_cb),
@@ -135,11 +150,6 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
       decrease_threads_button,
       "clicked",
       G_CALLBACK(decrease_threads_cb),
-      bind(text_view, data));
-  g_signal_connect_swapped(
-      toggle_pause_button,
-      "clicked",
-      G_CALLBACK(toggle_pause_button_cb),
       bind(text_view, data));
   g_signal_connect_swapped(
       exit_button, "clicked", G_CALLBACK(gtk_widget_destroy), window);

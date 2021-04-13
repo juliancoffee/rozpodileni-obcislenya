@@ -1,1 +1,4 @@
-= Labs for Rozpodileni Obcislenya in NTUU KPI
+# Labs for Rozpodileni Obcislenya in NTUU KPI
+
+# Requirements
+- Linux

@@ -31,6 +31,7 @@ struct computation_context_t {
   bool is_sync;
   atomic_bool *is_paused;
   /* mutlithreading staff */
+  bool different_priority;
   struct worker_t *workers;
   uint16_t num_threads;
 };
@@ -62,6 +63,7 @@ struct packed_args_t {
   size_t ystart;
   size_t yend;
   size_t pixels;
+  int niceness;
 };
 
 // template delcaration

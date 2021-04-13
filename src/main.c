@@ -3,7 +3,6 @@
 #include "memmacros.h"
 
 #define DEFAULT_THREADS 4
-// TODO: threads priority
 // TODO: implement clearing of image
 int main(int argc, char **argv) {
   /* set image size */
@@ -25,8 +24,9 @@ int main(int argc, char **argv) {
   struct computation_context_t comp_ctx = {
       .pixels = pixels,
       .set = NULL,
-      .is_sync = true,
+      .is_sync = false,
       .is_paused = BOXED((bool) false),
+      .different_priority = false,
       .num_threads = DEFAULT_THREADS,
       .workers = workers,
   };

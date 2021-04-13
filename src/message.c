@@ -12,6 +12,7 @@ static char *info_text(struct computation_context_t *ctx) {
   uint16_t num_threads = ctx->num_threads;
   size_t pixels = ctx->pixels;
   atomic_bool is_paused = *ctx->is_paused;
+  bool use_priority = ctx->different_priority;
 
   size_t buflen = 1000;
   char *msg_buf =
@@ -22,10 +23,13 @@ static char *info_text(struct computation_context_t *ctx) {
       buflen - 1, /* one byte for '\0'*/
       " Is synced: %s\n"
       " Is paused: %s\n"
+      " Using different\n"
+      " priority: %s\n"
       " Number of threads: %hd\n"
       " Image size: %zu*%zu pixels",
       is_sync ? "true" : "false",
       is_paused ? "true" : "false",
+      use_priority ? "true" : "false",
       num_threads,
       pixels,
       pixels);

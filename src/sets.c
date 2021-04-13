@@ -1,7 +1,9 @@
+#define _XOPEN_SOURCE
 #include "sets.h"
 #include "data.h"
 #include "util.h"
 #include <complex.h>
+#include <unistd.h>
 
 static double norm(complex double z) {
   double x = creal(z);
@@ -40,6 +42,8 @@ static void mandelbrot_fill_range(
 
 static void *mandelbrot_fill_range_helper(void *arg) {
   struct packed_args_t *args = arg;
+  // lower niceness of thread
+  nice(args->niceness);
   mandelbrot_fill_range(
       args->colors, args->ystart, args->yend, args->pixels, args->is_paused);
   free(args);
@@ -49,20 +53,27 @@ static void *mandelbrot_fill_range_helper(void *arg) {
 void fill_mandelbrot(
     atomic_int *colors,
     size_t pixels,
+    bool use_priority,
     atomic_bool *is_paused,
     struct worker_t *workers,
     uint16_t num_threads) {
 
+  size_t priority_threshold = MAX(num_threads / 2 - 1, 1);
+  // Spawning workers to fill set
   for (uint16_t n = 0; n < num_threads; n++) {
     size_t start = n * pixels / num_threads;
     size_t end = (n + 1) * pixels / num_threads;
-    // memory management: freed in callback function
+    int niceness = 0;
+    if (use_priority && n < priority_threshold) {
+      niceness = 10;
+    }
     struct packed_args_t args = {
         .colors = colors,
         .ystart = start,
         .yend = end,
         .pixels = pixels,
         .is_paused = is_paused,
+        .niceness = niceness,
     };
     pthread_create(
         &workers[n].thread, NULL, mandelbrot_fill_range_helper, BOXED(args));
