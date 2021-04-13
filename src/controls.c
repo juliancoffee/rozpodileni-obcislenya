@@ -61,25 +61,17 @@ void toggle_pause_button_cb(struct binded_widget_t *bind) {
   update_info(text_view, ctx);
 }
 
-void sync_button_cb(struct binded_widget_t *bind) {
+void toggle_sync_button_cb(struct binded_widget_t *bind) {
   GtkWidget *text_view = bind->widget;
   struct computation_context_t *ctx = bind->data->comp_ctx;
 
-  ctx->is_sync = true;
+  bool old_val = ctx->is_sync;
+  ctx->is_sync = !old_val;
 
   update_info(text_view, ctx);
 }
 
-void async_button_cb(struct binded_widget_t *bind) {
-  GtkWidget *text_view = bind->widget;
-  struct computation_context_t *ctx = bind->data->comp_ctx;
-
-  ctx->is_sync = false;
-
-  update_info(text_view, ctx);
-}
-
-void update_workers(
+static void update_workers(
     struct computation_context_t *ctx, bool increase, GtkWidget *text_view) {
 
   uint16_t old_num = ctx->num_threads;

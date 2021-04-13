@@ -81,8 +81,7 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
 
   GtkWidget *draw_button = gtk_button_new_with_label("Draw");
   GtkWidget *calculate_button = gtk_button_new_with_label("Calculate");
-  GtkWidget *sync_button = gtk_button_new_with_label("Sync");
-  GtkWidget *async_button = gtk_button_new_with_label("Async");
+  GtkWidget *sync_button = gtk_button_new_with_label("Toggle Sync");
   GtkWidget *increase_threads_button = gtk_button_new_with_label("Inc");
   GtkWidget *decrease_threads_button = gtk_button_new_with_label("Dec");
   GtkWidget *toggle_pause_button = gtk_button_new_with_label("Toggle Pause");
@@ -101,7 +100,6 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
   gtk_container_add(GTK_CONTAINER(button_box), calculate_button);
   gtk_container_add(GTK_CONTAINER(button_box), toggle_pause_button);
   gtk_container_add(GTK_CONTAINER(button_box), sync_button);
-  gtk_container_add(GTK_CONTAINER(button_box), async_button);
   gtk_container_add(GTK_CONTAINER(button_box), increase_threads_button);
   gtk_container_add(GTK_CONTAINER(button_box), decrease_threads_button);
   gtk_container_add(GTK_CONTAINER(button_box), exit_button);
@@ -125,13 +123,7 @@ static void activate(GtkApplication *app, struct GlobalData *data) {
   g_signal_connect_swapped(
       sync_button,
       "clicked",
-      G_CALLBACK(sync_button_cb),
-      bind(text_view, data));
-
-  g_signal_connect_swapped(
-      async_button,
-      "clicked",
-      G_CALLBACK(async_button_cb),
+      G_CALLBACK(toggle_sync_button_cb),
       bind(text_view, data));
 
   g_signal_connect_swapped(
